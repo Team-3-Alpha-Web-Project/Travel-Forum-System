@@ -1,4 +1,7 @@
+create database if not exists forum;
+
 use forum;
+
 
 create table users
 (
@@ -73,4 +76,3 @@ create table likes
     constraint likes_users_fk
         foreign key (user_id) references users (user_id)
 );
-
