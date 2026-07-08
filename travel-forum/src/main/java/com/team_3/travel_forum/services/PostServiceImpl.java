@@ -1,5 +1,7 @@
 package com.team_3.travel_forum.services;
 
+import com.team_3.travel_forum.exceptions.BlockedUserException;
+import com.team_3.travel_forum.exceptions.UnauthorizedAccessException;
 import com.team_3.travel_forum.models.Post;
 import com.team_3.travel_forum.models.Role;
 import com.team_3.travel_forum.models.User;
@@ -42,7 +44,7 @@ public class PostServiceImpl implements PostService {
     @Override
     public void create(Post post, User currentUser) {
         if (currentUser.isBlocked()) {
-            throw new RuntimeException("Blocked users cannot create posts.");
+            throw new BlockedUserException("Blocked users cannot create posts.");
         }
         post.setUser(currentUser);
         postRepository.create(post);
@@ -70,7 +72,7 @@ public class PostServiceImpl implements PostService {
         boolean isAdmin = user.getRole() == Role.ROLE_ADMIN;
 
         if (!isOwner && !isAdmin) {
-            throw new RuntimeException("You do not have permission to modify this post.");
+            throw new UnauthorizedAccessException("You do not have permission to modify this post.");
         }
     }
 }
