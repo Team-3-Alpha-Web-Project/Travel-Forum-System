@@ -7,16 +7,13 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Entity
-@Table(name = "comments")
-public class Comment {
+@Table(name = "likes")
+public class Like {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "comment_id")
+    @Column(name = "like_id")
     private int id;
-
-    @Column(name = "content")
-    private String content;
 
     @CreationTimestamp
     @Column(name = "created_at")
@@ -30,7 +27,7 @@ public class Comment {
     @JoinColumn(name = "user_id")
     private User user;
 
-    public Comment() {
+    public Like() {
     }
 
     public int getId() {
@@ -39,14 +36,6 @@ public class Comment {
 
     public void setId(int id) {
         this.id = id;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
     }
 
     public LocalDateTime getCreatedAt() {
@@ -76,8 +65,8 @@ public class Comment {
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
-        Comment comment = (Comment) o;
-        return id == comment.id;
+        Like like = (Like) o;
+        return id == like.id;
     }
 
     @Override
