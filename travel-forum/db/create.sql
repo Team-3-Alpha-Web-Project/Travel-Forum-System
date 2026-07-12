@@ -18,10 +18,6 @@ create table users
     constraint users_pk
         unique (email),
     constraint users_pk_2
-        unique (email),
-    constraint users_pk_3
-        unique (username),
-    constraint users_pk_4
         unique (username)
 );
 

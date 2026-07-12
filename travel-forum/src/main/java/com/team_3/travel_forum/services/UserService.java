@@ -1,6 +1,7 @@
 package com.team_3.travel_forum.services;
 
 import com.team_3.travel_forum.models.User;
+import com.team_3.travel_forum.models.dtos.RegisterUserDto;
 
 import java.util.List;
 
@@ -20,7 +21,7 @@ public interface UserService {
 
     void create(User user);
 
-    void update(User user);
+    void update(int id, User user);
 
     void delete(int id);
 
@@ -29,4 +30,6 @@ public interface UserService {
     void unblock(int id);
 
     void promoteToAdmin(int id);
+
+    void register(RegisterUserDto dto);
 }

@@ -1,7 +1,9 @@
 package com.team_3.travel_forum.services;
 
+import com.team_3.travel_forum.exceptions.DuplicateEntityException;
 import com.team_3.travel_forum.models.Role;
 import com.team_3.travel_forum.models.User;
+import com.team_3.travel_forum.models.dtos.RegisterUserDto;
 import com.team_3.travel_forum.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,10 +14,14 @@ import java.util.List;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+//    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository) {
+    public UserServiceImpl(UserRepository userRepository
+//            , PasswordEncoder passwordEncoder
+    ) {
         this.userRepository = userRepository;
+//        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -50,12 +56,34 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void create(User user) {
+        if (userRepository.existsByUsername(user.getUsername())) {
+            throw new DuplicateEntityException("User", "username", user.getUsername());
+        }
+
+        if (userRepository.existsByEmail(user.getEmail())) {
+            throw new DuplicateEntityException("User", "email", user.getEmail());
+        }
+
+        user.setRole(Role.ROLE_USER);
+        user.setBlocked(false);
+
         userRepository.create(user);
     }
 
     @Override
-    public void update(User user) {
-        userRepository.update(user);
+    public void update(int id, User user) {
+        User userToUpdate = userRepository.get(id);
+
+        if (!userToUpdate.getEmail().equalsIgnoreCase(user.getEmail()) && userRepository.existsByEmail(user.getEmail())) {
+            throw new DuplicateEntityException("User", "email", user.getEmail());
+        }
+
+        userToUpdate.setFirstName(user.getFirstName());
+        userToUpdate.setLastName(user.getLastName());
+        userToUpdate.setEmail(user.getEmail());
+        userToUpdate.setProfilePhotoUrl(user.getProfilePhotoUrl());
+
+        userRepository.update(userToUpdate);
     }
 
     @Override
@@ -88,5 +116,31 @@ public class UserServiceImpl implements UserService {
         user.setRole(Role.ROLE_ADMIN);
 
         userRepository.update(user);
+    }
+
+    @Override
+    public void register(RegisterUserDto dto) {
+        if (userRepository.existsByUsername(dto.getUsername())) {
+            throw new DuplicateEntityException("User", "username", dto.getUsername());
+        }
+
+        if (userRepository.existsByEmail(dto.getEmail())) {
+            throw new DuplicateEntityException("User", "email", dto.getEmail());
+        }
+
+        User user = new User();
+
+        user.setFirstName(dto.getFirstName());
+        user.setLastName(dto.getLastName());
+        user.setEmail(dto.getEmail());
+        user.setUsername(dto.getUsername());
+//        when Spring Security dependency is added.
+//        user.setPassword(passwordEncoder.encode(dto.getPassword()));
+        user.setPassword(dto.getPassword());
+        user.setRole(Role.ROLE_USER);
+        user.setBlocked(false);
+        user.setProfilePhotoUrl(dto.getProfilePhotoUrl());
+
+        userRepository.create(user);
     }
 }

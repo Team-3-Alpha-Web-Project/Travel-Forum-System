@@ -1,7 +1,7 @@
 package com.team_3.travel_forum.repositories;
 
+import com.team_3.travel_forum.exceptions.EntityNotFoundException;
 import com.team_3.travel_forum.models.User;
-import jakarta.persistence.EntityManagerFactory;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
@@ -16,25 +16,15 @@ public class UserRepositoryImpl implements UserRepository {
     private final SessionFactory sessionFactory;
 
     @Autowired
-//    public UserRepositoryImpl(SessionFactory sessionFactory) {
-//        this.sessionFactory = sessionFactory;
-//    }
-
-
-    //защо е толкова различно и трябва ли да започваме проекта на ново, за да може да следваме предишните проекти
-    public UserRepositoryImpl(EntityManagerFactory entityManagerFactory) {
-        this.sessionFactory =
-                entityManagerFactory.unwrap(SessionFactory.class);
+    public UserRepositoryImpl(SessionFactory sessionFactory) {
+        this.sessionFactory = sessionFactory;
     }
 
     @Override
     public List<User> get() {
         try (Session session = sessionFactory.openSession()) {
 
-            Query<User> query = session.createQuery(
-                    "from User",
-                    User.class
-            );
+            Query<User> query = session.createQuery("from User", User.class);
 
             return query.list();
         }
@@ -44,13 +34,10 @@ public class UserRepositoryImpl implements UserRepository {
     public User get(int id) {
         try (Session session = sessionFactory.openSession()) {
 
-//            User user = session.get(User.class, id);
-
-            //така ли да го използваме това
             User user = session.find(User.class, id);
 
             if (user == null) {
-                throw new RuntimeException("User not found.");
+                throw new EntityNotFoundException("User");
             }
 
             return user;
@@ -61,17 +48,14 @@ public class UserRepositoryImpl implements UserRepository {
     public User get(String username) {
         try (Session session = sessionFactory.openSession()) {
 
-            Query<User> query = session.createQuery(
-                    "from User where username = :username",
-                    User.class
-            );
+            Query<User> query = session.createQuery("from User where username = :username", User.class);
 
             query.setParameter("username", username);
 
             List<User> result = query.list();
 
             if (result.isEmpty()) {
-                throw new RuntimeException("User not found.");
+                throw new EntityNotFoundException("User", "username", username);
             }
 
             return result.get(0);
@@ -82,10 +66,7 @@ public class UserRepositoryImpl implements UserRepository {
     public List<User> searchByUsername(String username) {
         try (Session session = sessionFactory.openSession()) {
 
-            Query<User> query = session.createQuery(
-                    "from User where lower(username) like lower(:username)",
-                    User.class
-            );
+            Query<User> query = session.createQuery("from User where lower(username) like lower(:username)", User.class);
 
             query.setParameter("username", "%" + username + "%");
 
@@ -97,10 +78,7 @@ public class UserRepositoryImpl implements UserRepository {
     public List<User> searchByEmail(String email) {
         try (Session session = sessionFactory.openSession()) {
 
-            Query<User> query = session.createQuery(
-                    "from User where lower(email) like lower(:email)",
-                    User.class
-            );
+            Query<User> query = session.createQuery("from User where lower(email) like lower(:email)", User.class);
 
             query.setParameter("email", "%" + email + "%");
 
@@ -112,14 +90,34 @@ public class UserRepositoryImpl implements UserRepository {
     public List<User> searchByFirstName(String firstName) {
         try (Session session = sessionFactory.openSession()) {
 
-            Query<User> query = session.createQuery(
-                    "from User where lower(firstName) like lower(:firstName)",
-                    User.class
-            );
+            Query<User> query = session.createQuery("from User where lower(firstName) like lower(:firstName)", User.class);
 
             query.setParameter("firstName", "%" + firstName + "%");
 
             return query.list();
+        }
+    }
+
+    @Override
+    public boolean existsByUsername(String username) {
+        try (Session session = sessionFactory.openSession()) {
+            Query<Long> query = session.createQuery("select count(u) from User u " + "where lower(u.username) = lower(:username)", Long.class);
+
+            query.setParameter("username", username);
+
+            return query.uniqueResult() > 0;
+        }
+    }
+
+    @Override
+    public boolean existsByEmail(String email) {
+        try (Session session = sessionFactory.openSession()) {
+            Query<Long> query = session.createQuery(
+                    "select count(u) from User u " + "where lower(u.email) = lower(:email)", Long.class);
+
+            query.setParameter("email", email);
+
+            return query.uniqueResult() > 0;
         }
     }
 
@@ -153,11 +151,9 @@ public class UserRepositoryImpl implements UserRepository {
 
             session.beginTransaction();
 
-//            User user = session.get(User.class, id);
-
             User user = session.find(User.class, id);
             if (user == null) {
-                throw new RuntimeException("User not found.");
+                throw new EntityNotFoundException("User");
             }
 
             session.remove(user);
@@ -165,6 +161,4 @@ public class UserRepositoryImpl implements UserRepository {
             session.getTransaction().commit();
         }
     }
-
-
 }

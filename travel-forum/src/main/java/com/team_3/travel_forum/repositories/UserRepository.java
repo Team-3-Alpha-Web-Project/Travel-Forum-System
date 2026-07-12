@@ -18,6 +18,10 @@ public interface UserRepository {
 
     List<User> searchByFirstName(String firstName);
 
+    boolean existsByUsername(String username);
+
+    boolean existsByEmail(String email);
+
     void create(User user);
 
     void update(User user);
