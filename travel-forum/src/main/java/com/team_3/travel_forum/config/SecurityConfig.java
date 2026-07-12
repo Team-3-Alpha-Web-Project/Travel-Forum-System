@@ -19,17 +19,13 @@ public class SecurityConfig {
         return http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        // Public pages
                         .requestMatchers("/", "/home").permitAll()
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers("/swagger-ui/**").permitAll()
                         .requestMatchers("/v3/api-docs/**").permitAll()
                         .requestMatchers("/css/**", "/js/**", "/images/**").permitAll()
 
-                        // Public home-page lists ONLY — per spec, everything else on
-                        // posts/comments requires authentication.
                         // TODO: replace with your actual endpoint paths once built,
-                        // e.g. "/api/posts/top-commented" and "/api/posts/recent"
                         .requestMatchers(HttpMethod.GET, "/api/posts/top-commented").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/posts/recent").permitAll()
 
