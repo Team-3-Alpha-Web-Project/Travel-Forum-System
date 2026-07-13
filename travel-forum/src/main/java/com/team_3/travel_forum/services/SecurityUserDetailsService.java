@@ -3,7 +3,7 @@ package com.team_3.travel_forum.services;
 import com.team_3.travel_forum.exceptions.EntityNotFoundException;
 import com.team_3.travel_forum.models.User;
 import com.team_3.travel_forum.repositories.UserRepository;
-import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.NullMarked;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -11,6 +11,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 @Service
+@NullMarked
 public class SecurityUserDetailsService implements UserDetailsService {
 
     private final UserRepository userRepository;
