@@ -21,17 +21,6 @@ public class CommentRepositoryImpl implements CommentRepository {
     }
 
     @Override
-    public List<Comment> get() {
-        try (Session session = sessionFactory.openSession()) {
-            Query<Comment> query = session.createQuery(
-                    "from Comment", Comment.class
-            );
-
-            return query.list();
-        }
-    }
-
-    @Override
     public Comment get(int id) {
         try (Session session = sessionFactory.openSession()) {
             Comment comment = session.find(Comment.class, id);

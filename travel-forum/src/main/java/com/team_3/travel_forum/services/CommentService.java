@@ -7,8 +7,6 @@ import java.util.List;
 
 public interface CommentService {
 
-    List<Comment> get();
-
     Comment get(int id);
 
     void create(String content, int postId, User currentUser);

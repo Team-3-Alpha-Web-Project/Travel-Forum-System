@@ -5,7 +5,6 @@ import com.team_3.travel_forum.models.Comment;
 import java.util.List;
 
 public interface CommentRepository {
-    List<Comment> get();
 
     Comment get(int id);
 

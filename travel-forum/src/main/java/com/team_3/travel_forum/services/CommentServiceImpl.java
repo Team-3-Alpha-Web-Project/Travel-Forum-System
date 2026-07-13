@@ -29,11 +29,6 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public List<Comment> get() {
-        return commentRepository.get();
-    }
-
-    @Override
     public Comment get(int id) {
         return commentRepository.get(id);
     }
