@@ -2,7 +2,6 @@ package com.team_3.travel_forum.services;
 
 import com.team_3.travel_forum.exceptions.BlockedUserException;
 import com.team_3.travel_forum.exceptions.EntityNotFoundException;
-import com.team_3.travel_forum.exceptions.UnauthorizedAccessException;
 import com.team_3.travel_forum.models.Like;
 import com.team_3.travel_forum.models.Post;
 import com.team_3.travel_forum.models.User;
@@ -25,11 +24,6 @@ public class LikeServiceImpl implements LikeService {
 
     @Override
     public void addLike(int postId, User currentUser) {
-        if (currentUser == null) {
-            throw new UnauthorizedAccessException("You must be logged in to like a post.");
-        }
-
-        //TODO discuss if blocked users should be able to like posts
         if (currentUser.isBlocked()) {
             throw new BlockedUserException("Your account has been blocked and you cannot like posts.");
         }
@@ -37,7 +31,7 @@ public class LikeServiceImpl implements LikeService {
         Post currentPost = postRepository.get(postId);
 
         if (likeRepository.findByPostAndUser(postId, currentUser.getId()) != null) {
-            return; //post already liked, nothing to do
+            return;
         }
 
         Like newLike = new Like();
@@ -51,10 +45,6 @@ public class LikeServiceImpl implements LikeService {
 
     @Override
     public void removeLike(int postId, User currentUser) {
-        if (currentUser == null) {
-            throw new UnauthorizedAccessException("You must be logged in to unlike a post.");
-        }
-        //TODO discuss if blocked users should be able to like posts
         if (currentUser.isBlocked()) {
             throw new BlockedUserException("Your account has been blocked and you cannot unlike posts.");
         }
@@ -70,8 +60,9 @@ public class LikeServiceImpl implements LikeService {
     }
 
     @Override
-    public long getLikeCountForPost(int postId) {
+    public long countByPost(int postId) {
         postRepository.get(postId);
+
         return likeRepository.countByPost(postId);
     }
 }

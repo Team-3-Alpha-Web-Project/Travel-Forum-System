@@ -8,5 +8,5 @@ public interface LikeService {
 
     void removeLike(int postId, User currentUser);
 
-    long getLikeCountForPost(int postId);
+    long countByPost(int postId);
 }
