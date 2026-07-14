@@ -118,7 +118,7 @@ public class PostRepositoryImpl implements PostRepository {
         }
 
         return switch (sortBy) {
-            case "mostLiked" -> "(select count(l) from PostLike l where l.post = p) desc";
+            case "mostLiked" -> "(select count(l) from Like l where l.post = p) desc";
             case "mostCommented" -> "(select count(c) from Comment c where c.post = p) desc";
             default -> "p.createdAt desc";
         };
