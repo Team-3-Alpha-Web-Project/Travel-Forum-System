@@ -6,6 +6,7 @@ import com.team_3.travel_forum.models.User;
 import com.team_3.travel_forum.models.dtos.RegisterUserDto;
 import com.team_3.travel_forum.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,14 +15,14 @@ import java.util.List;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
-//    private final PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
     public UserServiceImpl(UserRepository userRepository
-//            , PasswordEncoder passwordEncoder
+            , PasswordEncoder passwordEncoder
     ) {
         this.userRepository = userRepository;
-//        this.passwordEncoder = passwordEncoder;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -134,8 +135,7 @@ public class UserServiceImpl implements UserService {
         user.setLastName(dto.getLastName());
         user.setEmail(dto.getEmail());
         user.setUsername(dto.getUsername());
-//        when Spring Security dependency is added.
-//        user.setPassword(passwordEncoder.encode(dto.getPassword()));
+        user.setPassword(passwordEncoder.encode(dto.getPassword()));
         user.setPassword(dto.getPassword());
         user.setRole(Role.ROLE_USER);
         user.setBlocked(false);
