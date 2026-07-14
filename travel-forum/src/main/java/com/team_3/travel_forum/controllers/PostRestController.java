@@ -60,11 +60,12 @@ public class PostRestController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void create(@Valid @RequestBody PostRequestDTO postRequestDTO,
+    public PostResponseDTO create(@Valid @RequestBody PostRequestDTO postRequestDTO,
                        @AuthenticationPrincipal User currentUser) {
         try {
             Post post = postMapper.fromDto(postRequestDTO);
             postService.create(post, currentUser);
+            return postMapper.toDto(post);
         } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         } catch (BlockedUserException e) {
@@ -73,12 +74,13 @@ public class PostRestController {
     }
 
     @PutMapping("/{id}")
-    public void update(@PathVariable int id,
+    public PostResponseDTO update(@PathVariable int id,
                        @Valid @RequestBody PostRequestDTO postRequestDTO,
                        @AuthenticationPrincipal User currentUser) {
         try {
             Post post = postMapper.fromDto(id, postRequestDTO);
             postService.update(post, currentUser);
+            return postMapper.toDto(post);
         } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         } catch (UnauthorizedAccessException e) {
