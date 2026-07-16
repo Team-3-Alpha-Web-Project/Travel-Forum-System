@@ -2,64 +2,64 @@ insert into users
 (first_name, last_name, email, username, password, role, is_blocked, profile_photo_url)
 values
     ('Spasimira', 'Genova', 'spasimira@traveltalk.com',
-     'spasimiragenova', 'Travel123!', 'ROLE_ADMIN', 0, null),
+     'spasimiragenova', '{bcrypt}$2a$10$RETKEa8ipLASGDeoVuP0GejzTpb0eJeIrXW4JD5/YrUKMjt/w4jvS', 'ROLE_ADMIN', 0, null),
 
     ('Kalina', 'Stefanova', 'kalina@traveltalk.com',
-     'kalinastefanova', 'Travel123!', 'ROLE_ADMIN', 0, null),
+     'kalinastefanova', '{bcrypt}$2a$10$RETKEa8ipLASGDeoVuP0GejzTpb0eJeIrXW4JD5/YrUKMjt/w4jvS', 'ROLE_ADMIN', 0, null),
 
     ('Alexandra', 'Alexova', 'alexandra@traveltalk.com',
-     'alexandraalexova', 'Travel123!', 'ROLE_ADMIN', 0, null),
+     'alexandraalexova', '{bcrypt}$2a$10$RETKEa8ipLASGDeoVuP0GejzTpb0eJeIrXW4JD5/YrUKMjt/w4jvS', 'ROLE_ADMIN', 0, null),
 
     ('Daniel', 'Georgiev', 'daniel.georgiev@example.com',
-     'danieltravels', 'Travel123!', 'ROLE_USER', 0, null),
+     'danieltravels', '{bcrypt}$2a$10$RETKEa8ipLASGDeoVuP0GejzTpb0eJeIrXW4JD5/YrUKMjt/w4jvS', 'ROLE_USER', 0, null),
 
     ('Elena', 'Ivanova', 'elena.ivanova@example.com',
-     'elenawanders', 'Travel123!', 'ROLE_USER', 0, null),
+     'elenawanders', '{bcrypt}$2a$10$RETKEa8ipLASGDeoVuP0GejzTpb0eJeIrXW4JD5/YrUKMjt/w4jvS', 'ROLE_USER', 0, null),
 
     ('Sofia', 'Dimitrova', 'sofia.dimitrova@example.com',
-     'sofiaabroad', 'Travel123!', 'ROLE_USER', 0, null),
+     'sofiaabroad', '{bcrypt}$2a$10$RETKEa8ipLASGDeoVuP0GejzTpb0eJeIrXW4JD5/YrUKMjt/w4jvS', 'ROLE_USER', 0, null),
 
     ('Viktor', 'Nikolov', 'viktor.nikolov@example.com',
-     'viktortrip', 'Travel123!', 'ROLE_USER', 1, null),
+     'viktortrip', '{bcrypt}$2a$10$RETKEa8ipLASGDeoVuP0GejzTpb0eJeIrXW4JD5/YrUKMjt/w4jvS', 'ROLE_USER', 1, null),
 
     ('Olivia', 'Carter', 'olivia.carter@example.com',
-     'oliviatravels', 'Travel123!', 'ROLE_USER', 0, null),
+     'oliviatravels', '{bcrypt}$2a$10$RETKEa8ipLASGDeoVuP0GejzTpb0eJeIrXW4JD5/YrUKMjt/w4jvS', 'ROLE_USER', 0, null),
 
     ('Ethan', 'Walker', 'ethan.walker@example.com',
-     'ethanexplores', 'Travel123!', 'ROLE_USER', 0, null),
+     'ethanexplores', '{bcrypt}$2a$10$RETKEa8ipLASGDeoVuP0GejzTpb0eJeIrXW4JD5/YrUKMjt/w4jvS', 'ROLE_USER', 0, null),
 
     ('Amelia', 'Harris', 'amelia.harris@example.com',
-     'ameliaroutes', 'Travel123!', 'ROLE_USER', 0, null),
+     'ameliaroutes', '{bcrypt}$2a$10$RETKEa8ipLASGDeoVuP0GejzTpb0eJeIrXW4JD5/YrUKMjt/w4jvS', 'ROLE_USER', 0, null),
 
     ('Lucas', 'Martin', 'lucas.martin@example.com',
-     'lucasontheroad', 'Travel123!', 'ROLE_USER', 0, null),
+     'lucasontheroad', '{bcrypt}$2a$10$RETKEa8ipLASGDeoVuP0GejzTpb0eJeIrXW4JD5/YrUKMjt/w4jvS', 'ROLE_USER', 0, null),
 
     ('Clara', 'Fischer', 'clara.fischer@example.com',
-     'clarawanders', 'Travel123!', 'ROLE_USER', 0, null),
+     'clarawanders', '{bcrypt}$2a$10$RETKEa8ipLASGDeoVuP0GejzTpb0eJeIrXW4JD5/YrUKMjt/w4jvS', 'ROLE_USER', 0, null),
 
     ('Leon', 'Wagner', 'leon.wagner@example.com',
-     'leonjourneys', 'Travel123!', 'ROLE_USER', 0, null),
+     'leonjourneys', '{bcrypt}$2a$10$RETKEa8ipLASGDeoVuP0GejzTpb0eJeIrXW4JD5/YrUKMjt/w4jvS', 'ROLE_USER', 0, null),
 
     ('Emily', 'Wilson', 'emily.wilson@example.com',
-     'emilycitybreaks', 'Travel123!', 'ROLE_USER', 0, null),
+     'emilycitybreaks', '{bcrypt}$2a$10$RETKEa8ipLASGDeoVuP0GejzTpb0eJeIrXW4JD5/YrUKMjt/w4jvS', 'ROLE_USER', 0, null),
 
     ('Mateo', 'Garcia', 'mateo.garcia@example.com',
-     'mateobudgettrip', 'Travel123!', 'ROLE_USER', 1, null),
+     'mateobudgettrip', '{bcrypt}$2a$10$RETKEa8ipLASGDeoVuP0GejzTpb0eJeIrXW4JD5/YrUKMjt/w4jvS', 'ROLE_USER', 1, null),
 
     ('Lucia', 'Romano', 'lucia.romano@example.com',
-     'luciaeats', 'Travel123!', 'ROLE_USER', 0, null),
+     'luciaeats', '{bcrypt}$2a$10$RETKEa8ipLASGDeoVuP0GejzTpb0eJeIrXW4JD5/YrUKMjt/w4jvS', 'ROLE_USER', 0, null),
 
     ('Alice', 'Moretti', 'alice.moretti@example.com',
-     'alicehiddenplaces', 'Travel123!', 'ROLE_USER', 0, null),
+     'alicehiddenplaces', '{bcrypt}$2a$10$RETKEa8ipLASGDeoVuP0GejzTpb0eJeIrXW4JD5/YrUKMjt/w4jvS', 'ROLE_USER', 0, null),
 
     ('Hugo', 'Laurent', 'hugo.laurent@example.com',
-     'hugoweekends', 'Travel123!', 'ROLE_USER', 0, null),
+     'hugoweekends', '{bcrypt}$2a$10$RETKEa8ipLASGDeoVuP0GejzTpb0eJeIrXW4JD5/YrUKMjt/w4jvS', 'ROLE_USER', 0, null),
 
     ('Nora', 'Jensen', 'nora.jensen@example.com',
-     'norasolotravel', 'Travel123!', 'ROLE_USER', 0, null),
+     'norasolotravel', '{bcrypt}$2a$10$RETKEa8ipLASGDeoVuP0GejzTpb0eJeIrXW4JD5/YrUKMjt/w4jvS', 'ROLE_USER', 0, null),
 
     ('Sarah', 'Andersson', 'sarah.andersson@example.com',
-     'sarahcarryon', 'Travel123!', 'ROLE_USER', 0, null);
+     'sarahcarryon', '{bcrypt}$2a$10$RETKEa8ipLASGDeoVuP0GejzTpb0eJeIrXW4JD5/YrUKMjt/w4jvS', 'ROLE_USER', 0, null);
 
 
 insert into posts
