@@ -10,6 +10,7 @@ import com.team_3.travel_forum.models.dtos.CommentRequestDto;
 import com.team_3.travel_forum.models.dtos.CommentResponseDto;
 import com.team_3.travel_forum.services.CommentService;
 import com.team_3.travel_forum.services.PostService;
+import com.team_3.travel_forum.services.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,6 +18,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.security.Principal;
 import java.util.List;
 
 @RestController
@@ -26,15 +28,17 @@ public class CommentRestController {
     private final CommentService commentService;
     private final PostService postService;
     private final CommentMapper commentMapper;
+    private final UserService userService;
 
 
     @Autowired
     public CommentRestController(CommentService commentService,
                                  PostService postService,
-                                 CommentMapper commentMapper) {
+                                 CommentMapper commentMapper, UserService userService) {
         this.commentService = commentService;
         this.postService = postService;
         this.commentMapper = commentMapper;
+        this.userService = userService;
     }
 
     @GetMapping("/{id}")
@@ -69,12 +73,14 @@ public class CommentRestController {
 
     @PostMapping("/posts/{postId}/comments")
     @ResponseStatus(HttpStatus.CREATED)
-    public CommentResponseDto createComment(@PathVariable int postId,
-                              @Valid @RequestBody CommentRequestDto commentRequestDto,
-                              @AuthenticationPrincipal User currentUser) {
+    public CommentResponseDto createComment(
+            @PathVariable int postId,
+            @Valid @RequestBody CommentRequestDto commentRequestDto,
+            Principal principal) {
         try {
             Comment comment = commentMapper.fromDto(commentRequestDto);
             comment.setPost(postService.get(postId));
+            User currentUser = userService.get(principal.getName());
             comment.setUser(currentUser);
 
             commentService.create(comment, currentUser);
@@ -88,10 +94,11 @@ public class CommentRestController {
     public CommentResponseDto updateComment(
             @PathVariable int commentId,
             @Valid @RequestBody CommentRequestDto commentRequestDto,
-            @AuthenticationPrincipal User currentUser) {
+            Principal principal) {
 
         try {
             Comment comment = commentMapper.fromDto(commentId, commentRequestDto);
+            User currentUser = userService.get(principal.getName());
             commentService.update(comment, currentUser);
             return commentMapper.toDto(comment);
         } catch (EntityNotFoundException e) {
@@ -105,8 +112,9 @@ public class CommentRestController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteComment(
             @PathVariable int commentId,
-            @AuthenticationPrincipal User currentUser) {
+            Principal principal) {
         try {
+            User currentUser = userService.get(principal.getName());
             commentService.delete(commentId, currentUser);
         } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
