@@ -15,48 +15,182 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfig {
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http)
+            throws Exception {
+
         return http
                 .csrf(csrf -> csrf.disable())
+
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/", "/home", "/api", "/error").permitAll()
-                        .requestMatchers("/api/auth/**").permitAll()
-                        .requestMatchers("/swagger-ui/**").permitAll()
-                        .requestMatchers("/v3/api-docs/**").permitAll()
-                        .requestMatchers("/css/**", "/js/**", "/images/**").permitAll()
 
-                        // TODO: replace with your actual endpoint paths once built,
-                        .requestMatchers(HttpMethod.GET, "/api/posts/top-commented").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/posts/recent").permitAll()
+                        /*
+                         * Public application routes
+                         */
+                        .requestMatchers(
+                                "/",
+                                "/home",
+                                "/api",
+                                "/error"
+                        ).permitAll()
 
-                        .requestMatchers(HttpMethod.GET, "/api/users").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.GET, "/api/users/{id}").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.GET, "/api/users/username/**").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.GET, "/api/users/search/**").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.DELETE, "/api/users/**").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.PATCH, "/api/users/*/block").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.PATCH, "/api/users/*/unblock").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.PATCH, "/api/users/*/promote").hasRole("ADMIN")
+                        /*
+                         * Public home-page data
+                         */
+                        .requestMatchers(
+                                HttpMethod.GET,
+                                "/api/stats",
+                                "/api/posts/recent",
+                                "/api/posts/top-commented"
+                        ).permitAll()
 
-                        .requestMatchers(HttpMethod.PUT, "/api/users/**").hasAnyRole("USER", "ADMIN")
+                        /*
+                         * Registration
+                         */
+                        .requestMatchers("/api/auth/**")
+                        .permitAll()
 
-                        // TODO: confirm against your future PostRestController / CommentRestController
-                        .requestMatchers(HttpMethod.POST, "/api/posts/**").hasAnyRole("USER", "ADMIN")
-                        .requestMatchers(HttpMethod.PUT, "/api/posts/**").hasAnyRole("USER", "ADMIN")
-                        .requestMatchers(HttpMethod.DELETE, "/api/posts/**").hasAnyRole("USER", "ADMIN")
+                        /*
+                         * Swagger
+                         */
+                        .requestMatchers(
+                                "/swagger-ui/**",
+                                "/swagger-ui.html",
+                                "/v3/api-docs/**"
+                        ).permitAll()
 
-                        .requestMatchers(HttpMethod.POST, "/api/comments/**").hasAnyRole("USER", "ADMIN")
-                        .requestMatchers(HttpMethod.PUT, "/api/comments/**").hasAnyRole("USER", "ADMIN")
-                        .requestMatchers(HttpMethod.DELETE, "/api/comments/**").hasAnyRole("USER", "ADMIN")
+                        /*
+                         * Static resources
+                         */
+                        .requestMatchers(
+                                "/css/**",
+                                "/js/**",
+                                "/images/**"
+                        ).permitAll()
 
-                        // TODO: confirm actual likes endpoint path/controller
-                        .requestMatchers(HttpMethod.POST, "/api/posts/*/likes").hasAnyRole("USER", "ADMIN")
+                        /*
+                         * Current user's own profile.
+                         *
+                         * These must come before the broader
+                         * /api/users/* administrator matcher.
+                         */
+                        .requestMatchers(
+                                HttpMethod.GET,
+                                "/api/users/me"
+                        ).authenticated()
 
+                        .requestMatchers(
+                                HttpMethod.PUT,
+                                "/api/users/me"
+                        ).authenticated()
+
+                        /*
+                         * Administrator user management
+                         */
+                        .requestMatchers(
+                                HttpMethod.GET,
+                                "/api/users",
+                                "/api/users/*",
+                                "/api/users/username/**",
+                                "/api/users/search/**"
+                        ).hasRole("ADMIN")
+
+                        .requestMatchers(
+                                HttpMethod.PUT,
+                                "/api/users/*"
+                        ).hasRole("ADMIN")
+
+                        .requestMatchers(
+                                HttpMethod.DELETE,
+                                "/api/users/*"
+                        ).hasRole("ADMIN")
+
+                        .requestMatchers(
+                                HttpMethod.PATCH,
+                                "/api/users/*/block",
+                                "/api/users/*/unblock",
+                                "/api/users/*/promote"
+                        ).hasRole("ADMIN")
+
+                        /*
+                         * Authenticated post browsing
+                         */
+                        .requestMatchers(
+                                HttpMethod.GET,
+                                "/api/posts",
+                                "/api/posts/*",
+                                "/api/posts/search",
+                                "/api/users/*/posts"
+                        ).authenticated()
+
+                        /*
+                         * Authenticated comment browsing
+                         */
+                        .requestMatchers(
+                                HttpMethod.GET,
+                                "/api/posts/*/comments",
+                                "/api/comments/*",
+                                "/api/users/*/comments"
+                        ).authenticated()
+
+                        /*
+                         * Creating and modifying posts
+                         */
+                        .requestMatchers(
+                                HttpMethod.POST,
+                                "/api/posts"
+                        ).hasAnyRole("USER", "ADMIN")
+
+                        .requestMatchers(
+                                HttpMethod.PUT,
+                                "/api/posts/*"
+                        ).hasAnyRole("USER", "ADMIN")
+
+                        .requestMatchers(
+                                HttpMethod.DELETE,
+                                "/api/posts/*"
+                        ).hasAnyRole("USER", "ADMIN")
+
+                        /*
+                         * Creating and modifying comments
+                         */
+                        .requestMatchers(
+                                HttpMethod.POST,
+                                "/api/posts/*/comments"
+                        ).hasAnyRole("USER", "ADMIN")
+
+                        .requestMatchers(
+                                HttpMethod.PUT,
+                                "/api/comments/*"
+                        ).hasAnyRole("USER", "ADMIN")
+
+                        .requestMatchers(
+                                HttpMethod.DELETE,
+                                "/api/comments/*"
+                        ).hasAnyRole("USER", "ADMIN")
+
+                        /*
+                         * Likes
+                         */
+                        .requestMatchers(
+                                HttpMethod.POST,
+                                "/api/posts/*/likes"
+                        ).hasAnyRole("USER", "ADMIN")
+
+                        .requestMatchers(
+                                HttpMethod.DELETE,
+                                "/api/posts/*/likes"
+                        ).hasAnyRole("USER", "ADMIN")
+
+                        /*
+                         * Everything else requires authentication.
+                         */
                         .anyRequest().authenticated()
                 )
-                .formLogin(Customizer.withDefaults())
-                .logout(Customizer.withDefaults())
+
+                .formLogin(form -> form.permitAll())
+                .logout(logout -> logout.permitAll())
                 .httpBasic(Customizer.withDefaults())
+
                 .build();
     }
 

@@ -9,8 +9,8 @@ public class PostResponseDTO {
     private String content;
     private LocalDateTime createdAt;
     private String authorUsername;
-    private int likesCount;
-    private int commentsCount;
+    private long likesCount;
+    private long commentsCount;
 
     public PostResponseDTO() {
     }
@@ -55,19 +55,19 @@ public class PostResponseDTO {
         this.authorUsername = authorUsername;
     }
 
-    public int getLikesCount() {
+    public long getLikesCount() {
         return likesCount;
     }
 
-    public void setLikesCount(int likesCount) {
+    public void setLikesCount(long likesCount) {
         this.likesCount = likesCount;
     }
 
-    public int getCommentsCount() {
+    public long getCommentsCount() {
         return commentsCount;
     }
 
-    public void setCommentsCount(int commentsCount) {
+    public void setCommentsCount(long commentsCount) {
         this.commentsCount = commentsCount;
     }
 }
