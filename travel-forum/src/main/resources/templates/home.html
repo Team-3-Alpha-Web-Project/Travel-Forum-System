@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Travel Forum</title>
+</head>
+<body>
+<h1>Travel Forum</h1>
+
+<div th:if="${username == null}">
+    <p>You are browsing anonymously.</p>
+    <a th:href="@{/login}">Log in</a>
+</div>
+
+<div th:if="${username != null}">
+    <p>Logged in as <strong th:text="${username}"></strong></p>
+    <a th:href="@{/api/posts}">View posts JSON</a>
+
+    <form th:action="@{/logout}" method="post">
+        <button type="submit">Log out</button>
+    </form>
+</div>
+</body>
+</html>

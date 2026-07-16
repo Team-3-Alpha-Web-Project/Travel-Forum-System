@@ -26,7 +26,7 @@ public class CommentRepositoryImpl implements CommentRepository {
             Comment comment = session.find(Comment.class, id);
 
             if (comment == null) {
-                throw new EntityNotFoundException("Comment not found.");
+                throw new EntityNotFoundException("Comment");
             }
 
             return comment;

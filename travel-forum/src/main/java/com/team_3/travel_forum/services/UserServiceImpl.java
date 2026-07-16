@@ -136,7 +136,6 @@ public class UserServiceImpl implements UserService {
         user.setEmail(dto.getEmail());
         user.setUsername(dto.getUsername());
         user.setPassword(passwordEncoder.encode(dto.getPassword()));
-        user.setPassword(dto.getPassword());
         user.setRole(Role.ROLE_USER);
         user.setBlocked(false);
         user.setProfilePhotoUrl(dto.getProfilePhotoUrl());
