@@ -3,6 +3,8 @@ package com.team_3.travel_forum.helpers;
 import com.team_3.travel_forum.models.Post;
 import com.team_3.travel_forum.models.dtos.PostRequestDTO;
 import com.team_3.travel_forum.models.dtos.PostResponseDTO;
+import com.team_3.travel_forum.services.CommentService;
+import com.team_3.travel_forum.services.LikeService;
 import com.team_3.travel_forum.services.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -14,10 +16,14 @@ import java.util.List;
 public class PostMapper {
 
     private final PostService postService;
+    private final CommentService commentService;
+    private final LikeService likeService;
 
     @Autowired
-    public PostMapper(PostService postService) {
+    public PostMapper(PostService postService, CommentService commentService, LikeService likeService) {
         this.postService = postService;
+        this.commentService = commentService;
+        this.likeService = likeService;
     }
 
     public Post fromDto(PostRequestDTO dto) {
@@ -26,7 +32,6 @@ public class PostMapper {
         post.setContent(dto.getContent());
         return post;
     }
-
 
     public Post fromDto(int id, PostRequestDTO dto) {
         Post post = postService.get(id);
@@ -43,9 +48,8 @@ public class PostMapper {
         dto.setCreatedAt(post.getCreatedAt());
         dto.setAuthorUsername(post.getUser().getUsername());
 
-        // TODO: wire up once Comment/PostLike services exist
-        dto.setLikesCount(0);
-        dto.setCommentsCount(0);
+        dto.setLikesCount(likeService.countByPost(post.getId()));
+        dto.setCommentsCount(commentService.countByPost(post.getId()));
 
         return dto;
     }
