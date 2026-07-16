@@ -1,7 +1,7 @@
 package com.team_3.travel_forum.repositories;
 
 import com.team_3.travel_forum.models.Post;
-import jakarta.persistence.EntityNotFoundException;
+import com.team_3.travel_forum.exceptions.EntityNotFoundException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
@@ -33,10 +33,10 @@ public class PostRepositoryImpl implements PostRepository {
     @Override
     public Post get(int id) {
         try (Session session = sessionFactory.openSession()) {
-            Post post = session.get(Post.class, id);
+            Post post = session.find(Post.class, id);
 
             if (post == null) {
-                throw new EntityNotFoundException("Post not found.");
+                throw new EntityNotFoundException("Post");
             }
 
             return post;

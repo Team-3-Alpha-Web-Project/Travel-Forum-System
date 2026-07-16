@@ -1,6 +1,7 @@
 package com.team_3.travel_forum.models;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 
@@ -19,6 +20,7 @@ public class Post {
     @Column(name = "content")
     private String content;
 
+    @CreationTimestamp
     @Column(name = "created_at", insertable = false, updatable = false)
     private LocalDateTime createdAt;
 
