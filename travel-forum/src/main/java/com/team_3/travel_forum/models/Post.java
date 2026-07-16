@@ -16,10 +16,8 @@ public class Post {
     @Column(name = "title")
     private String title;
 
-    @Column(name = "content")
     private String content;
 
-    @Column(name = "created_at", insertable = false, updatable = false)
     private LocalDateTime createdAt;
 
     @ManyToOne
