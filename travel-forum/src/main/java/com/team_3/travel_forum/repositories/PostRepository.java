@@ -19,4 +19,10 @@ public interface PostRepository {
     void update(Post post);
 
     void delete(int id);
+
+    long countAllPosts();
+
+    List<Post> getTop10MostCommented();
+
+    List<Post> getTop10Recent();
 }

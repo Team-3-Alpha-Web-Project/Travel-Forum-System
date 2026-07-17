@@ -67,6 +67,21 @@ public class PostServiceImpl implements PostService {
         postRepository.delete(id);
     }
 
+    @Override
+    public long countAllPosts() {
+        return postRepository.countAllPosts();
+    }
+
+    @Override
+    public List<Post> getTop10MostCommented() {
+        return postRepository.getTop10MostCommented();
+    }
+
+    @Override
+    public List<Post> getTop10Recent() {
+        return postRepository.getTop10Recent();
+    }
+
     private void checkModifyPermissions(Post post, User user) {
         boolean isOwner = post.getUser().getId() == user.getId();
         boolean isAdmin = user.getRole() == Role.ROLE_ADMIN;
