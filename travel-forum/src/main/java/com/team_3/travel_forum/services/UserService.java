@@ -2,7 +2,6 @@ package com.team_3.travel_forum.services;
 
 import com.team_3.travel_forum.models.User;
 import com.team_3.travel_forum.models.dtos.RegisterUserDto;
-
 import java.util.List;
 
 public interface UserService {
@@ -32,4 +31,6 @@ public interface UserService {
     void promoteToAdmin(int id);
 
     void register(RegisterUserDto dto);
+
+    long countAllUsers();
 }

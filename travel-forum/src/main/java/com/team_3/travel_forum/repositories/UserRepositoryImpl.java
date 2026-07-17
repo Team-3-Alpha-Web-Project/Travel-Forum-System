@@ -161,4 +161,16 @@ public class UserRepositoryImpl implements UserRepository {
             session.getTransaction().commit();
         }
     }
+
+    @Override
+    public long countAllUsers() {
+        try (Session session = sessionFactory.openSession()) {
+
+            Query<Long> query = session.createQuery(
+                    "select count(u) from User u", Long.class
+            );
+
+            return query.getSingleResult();
+        }
+    }
 }

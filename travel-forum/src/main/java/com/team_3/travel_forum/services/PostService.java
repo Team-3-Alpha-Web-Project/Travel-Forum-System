@@ -20,4 +20,10 @@ public interface PostService {
     void update(Post post, User currentUser);
 
     void delete(int id, User currentUser);
+
+    long countAllPosts();
+
+    List<Post> getTop10MostCommented();
+
+    List<Post> getTop10Recent();
 }

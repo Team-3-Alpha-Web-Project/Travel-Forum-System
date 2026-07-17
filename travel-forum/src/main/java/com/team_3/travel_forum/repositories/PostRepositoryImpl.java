@@ -5,6 +5,7 @@ import com.team_3.travel_forum.exceptions.EntityNotFoundException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -14,6 +15,7 @@ public class PostRepositoryImpl implements PostRepository {
 
     private final SessionFactory sessionFactory;
 
+    @Autowired
     public PostRepositoryImpl(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
     }
@@ -109,6 +111,48 @@ public class PostRepositoryImpl implements PostRepository {
             session.remove(session.merge(postToDelete));
 
             session.getTransaction().commit();
+        }
+    }
+
+    @Override
+    public long countAllPosts() {
+        try (Session session = sessionFactory.openSession()) {
+            Query<Long> query = session.createQuery(
+                    "select count(p) from Post p", Long.class
+            );
+
+            return query.getSingleResult();
+        }
+    }
+
+    @Override
+    public List<Post> getTop10MostCommented() {
+        try (Session session = sessionFactory.openSession()) {
+            Query<Post> query = session.createQuery(
+                    "select p from Post p " +
+                            "left join p.comments c " +
+                            "group by p " +
+                            "order by count(c) desc",
+                    Post.class);
+            query.setMaxResults(10);
+
+            return query.list();
+        }
+    }
+
+    @Override
+    public List<Post> getTop10Recent() {
+        try (Session session = sessionFactory.openSession()) {
+            Query<Post> query = session.createQuery(
+                    "select p from Post p " +
+                            "left join p.comments c " +
+                            "group by p " +
+                            "order by p.createdAt desc",
+                    Post.class);
+
+            query.setMaxResults(10);
+
+            return query.list();
         }
     }
 

@@ -5,6 +5,7 @@ import com.team_3.travel_forum.models.Like;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -14,6 +15,7 @@ public class LikeRepositoryImpl implements LikeRepository {
 
     private final SessionFactory sessionFactory;
 
+    @Autowired
     public LikeRepositoryImpl(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
     }

@@ -19,8 +19,7 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     public UserServiceImpl(UserRepository userRepository
-            , PasswordEncoder passwordEncoder
-    ) {
+            , PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
     }
@@ -141,5 +140,10 @@ public class UserServiceImpl implements UserService {
         user.setProfilePhotoUrl(dto.getProfilePhotoUrl());
 
         userRepository.create(user);
+    }
+
+    @Override
+    public long countAllUsers() {
+        return userRepository.countAllUsers();
     }
 }

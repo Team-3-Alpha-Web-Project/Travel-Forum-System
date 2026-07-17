@@ -54,8 +54,9 @@ public class CommentRestController {
     @GetMapping("/posts/{postId}/comments")
     public List<CommentResponseDto> getByPost(
             @PathVariable int postId,
-            @AuthenticationPrincipal User currentUser) {
+            Principal principal) {
 
+        User currentUser = userService.get(principal.getName());
         List<Comment> comments = commentService.getByPost(postId, currentUser);
 
         return commentMapper.toDto(comments);
@@ -64,8 +65,9 @@ public class CommentRestController {
     @GetMapping("/users/{userId}/comments")
     public List<CommentResponseDto> getByUser(
             @PathVariable int userId,
-            @AuthenticationPrincipal User currentUser) {
+            Principal principal) {
 
+        User currentUser = userService.get(principal.getName());
         List<Comment> comments = commentService.getByUser(userId, currentUser);
 
         return commentMapper.toDto(comments);

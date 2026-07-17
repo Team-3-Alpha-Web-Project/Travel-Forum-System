@@ -23,7 +23,17 @@ public class CommentRepositoryImpl implements CommentRepository {
     @Override
     public Comment get(int id) {
         try (Session session = sessionFactory.openSession()) {
-            Comment comment = session.find(Comment.class, id);
+//            Comment comment = session.find(Comment.class, id);
+            Query<Comment> query = session.createQuery(
+                    "select c from Comment c " +
+                            "left join fetch c.post " +
+                            "left join fetch c.user " +
+                            "where c.id = :id",
+                    Comment.class
+            );
+            query.setParameter("id", id);
+
+            Comment comment = query.uniqueResult();
 
             if (comment == null) {
                 throw new EntityNotFoundException("Comment");
@@ -62,7 +72,7 @@ public class CommentRepositoryImpl implements CommentRepository {
 
             Comment comment = session.find(Comment.class, id);
             if (comment == null) {
-                throw new EntityNotFoundException("Comment not found.");
+                throw new EntityNotFoundException("Comment");
             }
 
             session.remove(comment);
@@ -75,7 +85,12 @@ public class CommentRepositoryImpl implements CommentRepository {
     public List<Comment> searchByPost(int postId) {
         try (Session session = sessionFactory.openSession()) {
             Query<Comment> query = session.createQuery(
-                    "from Comment c where c.post.id =:postId", Comment.class
+//                    "from Comment c where c.post.id =:postId"
+                    "select c from Comment c " +
+                            "left join fetch c.post " +
+                            "left join fetch c.user " +
+                            "where c.post.id = :postId",
+                    Comment.class
             );
 
             query.setParameter("postId", postId);
@@ -88,7 +103,12 @@ public class CommentRepositoryImpl implements CommentRepository {
     public List<Comment> searchByUser(int userId) {
         try (Session session = sessionFactory.openSession()) {
             Query<Comment> query = session.createQuery(
-                    "from Comment c where c.user.id = :userId", Comment.class
+//                    "from Comment c where c.user.id = :userId"
+                    "select c from Comment c " +
+                            "left join fetch c.post " +
+                            "left join fetch c.user " +
+                            "where c.user.id = :userId",
+                    Comment.class
             );
 
             query.setParameter("userId", userId);
