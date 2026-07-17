@@ -1,0 +1,8 @@
+.header {
+    display: table-header-group;
+    font-weight: bold;
+}
+
+.error {
+    color: red;
+}

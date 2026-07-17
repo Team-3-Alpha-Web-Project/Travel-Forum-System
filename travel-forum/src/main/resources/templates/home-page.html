@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:display="http://www.w3.org/1999/xhtml"
+      xmlns:gap="http://www.w3.org/1999/xhtml">
+<form th:replace="~{fragments/page-layout.html :: head('Home')}"></form>
+<head>
+    <meta charset="UTF-8">
+    <title>TravelTipster</title>
+</head>
+<body>
+<form th:replace="~{fragments/page-layout.html :: header}"></form>
+
+<div class="body-content">
+    <h2 th:text="#{home.welcome}">Welcome!</h2>
+
+    <h3 th:text="#{home.slogan}">slogan</h3>
+
+    <p th:text="|Join our community of ${userCount} dedicated globetrotters who have shared ${postCount} itineraries, tips and stories!|"></p>
+<div class="navigation-cards" style="display: flex; gap: 20px;">
+    <a th:href="@{api/posts/recent}">
+        <h4 th:text="#{navigation.most-recent}">most recent</h4>
+    </a>
+
+    <a th:href="@{/api/posts/top-commented}">
+        <h4 th:text="#{navigation.most-commented}">most commented</h4>
+    </a>
+
+</div>
+</div>
+
+<form th:replace="~{fragments/page-layout.html :: footer}"></form>
+</body>
+</html>

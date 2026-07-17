@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:fragment="head(title)">
+    <meta charset="UTF-8">
+    <title th:text="'TravelTipster | '+ ${title}">Title</title>
+    <link href="../../static/css/styles.css" th:href="@{/css/styles.css}" rel="stylesheet"/>
+</head>
+<header th:fragment="header">
+    <div>
+        <h3>
+            <a href="#" th:href="@{/}" th:text="#{navigation.home} + '|'">Home</a>
+            <a href="#" sec:authorize="isAuthenticated()" th:href="@{/beers}" th:text="#{navigation.all-posts}+ '|'">Browse all posts</a>
+            <a href="#" sec:authorize="isAuthenticated()" th:href="@{/posts/new}" th:text="#{navigation.create-post}+ '|'">Create Post</a>
+            <a href="#" sec:authorize="hasRole('ADMIN')" th:href="@{/posts/new}" th:text="#{navigation.search-users}+ '|'">Search Users</a>
+            <a href="#" sec:authorize="isAnonymous()" th:href="@{/auth/login}">Login | </a>
+            <a href="#" sec:authorize="isAnonymous()" th:href="@{/auth/register}">Register</a>
+            <a href="#" sec:authorize="isAuthenticated()" th:href="@{/auth/logout}">Update Profile |</a>
+            <a href="#" sec:authorize="isAuthenticated()" th:href="@{/auth/logout}">Logout</a>
+        </h3>
+    </div>
+</header>
+<footer th:fragment="footer">
+    <small th:text="${'© Copyright ' + #dates.year(#dates.createNow()) + ' TravelTipster'}">TravelTipster</small>
+</footer>
+</html>
