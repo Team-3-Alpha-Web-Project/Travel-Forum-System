@@ -21,7 +21,7 @@ import java.security.Principal;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/comments")
+@RequestMapping("/api")
 public class CommentRestController {
 
     private final CommentService commentService;
@@ -40,7 +40,7 @@ public class CommentRestController {
         this.userService = userService;
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/comments/{id}")
     public CommentResponseDto get(@PathVariable int id) {
         try {
             Comment comment = commentService.get(id);
@@ -88,6 +88,8 @@ public class CommentRestController {
             return commentMapper.toDto(comment);
         } catch (BlockedUserException e) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getMessage());
+        } catch (EntityNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
     }
 
@@ -102,11 +104,11 @@ public class CommentRestController {
             User currentUser = userService.get(principal.getName());
             commentService.update(comment, currentUser);
             return commentMapper.toDto(comment);
+        } catch (BlockedUserException | UnauthorizedAccessException e) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getMessage());
         } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
-        } catch (UnauthorizedAccessException e) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getMessage());
-        }
+        } 
     }
 
     @DeleteMapping("/comments/{commentId}")
@@ -117,10 +119,10 @@ public class CommentRestController {
         try {
             User currentUser = userService.get(principal.getName());
             commentService.delete(commentId, currentUser);
+        } catch (BlockedUserException | UnauthorizedAccessException e) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getMessage());
         } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
-        } catch (UnauthorizedAccessException e) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getMessage());
         }
     }
 
