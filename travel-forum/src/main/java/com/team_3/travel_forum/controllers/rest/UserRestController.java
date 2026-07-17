@@ -1,10 +1,15 @@
 package com.team_3.travel_forum.controllers.rest;
 
 import com.team_3.travel_forum.models.User;
+import com.team_3.travel_forum.models.dtos.ChangePasswordDto;
 import com.team_3.travel_forum.services.UserService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
+import java.security.Principal;
 import java.util.List;
 
 @RestController
@@ -21,6 +26,28 @@ public class UserRestController {
     @GetMapping
     public List<User> get() {
         return userService.get();
+    }
+
+    @GetMapping("/me")
+    public User getCurrentUser(Principal principal) {
+        return userService.get(principal.getName());
+    }
+
+    @PutMapping("/me")
+    public void updateCurrentUser(@RequestBody User user, Principal principal) {
+        User currentUser = userService.get(principal.getName());
+
+        userService.update(currentUser.getId(), user);
+    }
+
+    @PatchMapping("/me/password")
+    public void changePassword(@Valid @RequestBody ChangePasswordDto dto,
+                               Principal principal) {
+        try {
+            userService.changePassword(principal.getName(), dto);
+        } catch (IllegalArgumentException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+        }
     }
 
     @GetMapping("/{id}")

@@ -53,7 +53,7 @@ public class LikeRepositoryImpl implements LikeRepository {
 
             Like like = session.find(Like.class, id);
             if (like == null) {
-                throw new EntityNotFoundException("Like not found.");
+                throw new EntityNotFoundException("Like");
             }
 
             session.remove(like);

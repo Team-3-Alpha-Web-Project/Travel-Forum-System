@@ -1,6 +1,7 @@
 package com.team_3.travel_forum.services;
 
 import com.team_3.travel_forum.models.User;
+import com.team_3.travel_forum.models.dtos.ChangePasswordDto;
 import com.team_3.travel_forum.models.dtos.RegisterUserDto;
 import java.util.List;
 
@@ -33,4 +34,6 @@ public interface UserService {
     void register(RegisterUserDto dto);
 
     long countAllUsers();
+
+    void changePassword(String username, ChangePasswordDto dto);
 }
