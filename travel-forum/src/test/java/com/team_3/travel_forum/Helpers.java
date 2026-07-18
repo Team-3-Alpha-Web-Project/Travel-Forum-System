@@ -61,7 +61,11 @@ public class Helpers {
         comment.setId(1);
         comment.setContent("Test comment");
         comment.setUser(user);
-        comment.setPost(createMockPost(user));
+
+        Post post = new Post();
+        post.setId(1);
+        comment.setPost(post);
+
         return comment;
     }
 

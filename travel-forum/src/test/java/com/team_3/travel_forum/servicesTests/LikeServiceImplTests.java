@@ -32,15 +32,16 @@ public class LikeServiceImplTests {
     @Test
     public void addLike_Should_CallRepository_When_UserHasNotLikedPostYet() {
         User mockUser = createMockUser();
+        mockUser.setId(5);
         Post mockPost = createMockPost();
 
-        Mockito.when(mockPostRepository.get(Mockito.anyInt()))
+        Mockito.when(mockPostRepository.get(9))
                 .thenReturn(mockPost);
 
-        Mockito.when(mockLikeRepository.findByPostAndUser(Mockito.anyInt(), Mockito.anyInt()))
+        Mockito.when(mockLikeRepository.findByPostAndUser(9, mockUser.getId()))
                 .thenReturn(null);
 
-        likeService.addLike(1, mockUser);
+        likeService.addLike(9, mockUser);
 
         Mockito.verify(mockLikeRepository, Mockito.times(1))
                 .create(Mockito.any(Like.class));
@@ -49,16 +50,19 @@ public class LikeServiceImplTests {
     @Test
     public void addLike_Should_NotCreateLike_When_UserAlreadyLikedPost() {
         User mockUser = createMockUser();
+        mockUser.setId(5);
         Post mockPost = createMockPost();
-        Like existingLike = new Like();
 
-        Mockito.when(mockPostRepository.get(Mockito.anyInt()))
+        Like existingLike = new Like();
+        existingLike.setId(1);
+
+        Mockito.when(mockPostRepository.get(9))
                 .thenReturn(mockPost);
 
-        Mockito.when(mockLikeRepository.findByPostAndUser(Mockito.anyInt(), Mockito.anyInt()))
+        Mockito.when(mockLikeRepository.findByPostAndUser(9, mockUser.getId()))
                 .thenReturn(existingLike);
 
-        likeService.addLike(1, mockUser);
+        likeService.addLike(9, mockUser);
 
         Mockito.verify(mockLikeRepository, Mockito.never())
                 .create(Mockito.any(Like.class));
@@ -81,17 +85,15 @@ public class LikeServiceImplTests {
     @Test
     public void removeLike_Should_CallRepository_When_LikeExists() {
         User mockUser = createMockUser();
-        Post mockPost = createMockPost();
+        mockUser.setId(5);
+
         Like existingLike = new Like();
         existingLike.setId(1);
 
-        Mockito.when(mockPostRepository.get(Mockito.anyInt()))
-                .thenReturn(mockPost);
-
-        Mockito.when(mockLikeRepository.findByPostAndUser(Mockito.anyInt(), Mockito.anyInt()))
+        Mockito.when(mockLikeRepository.findByPostAndUser(9, mockUser.getId()))
                 .thenReturn(existingLike);
 
-        likeService.removeLike(1, mockUser);
+        likeService.removeLike(9, mockUser);
 
         Mockito.verify(mockLikeRepository, Mockito.times(1))
                 .delete(existingLike.getId());
@@ -100,17 +102,14 @@ public class LikeServiceImplTests {
     @Test
     public void removeLike_Should_ThrowException_When_LikeDoesNotExist() {
         User mockUser = createMockUser();
-        Post mockPost = createMockPost();
+        mockUser.setId(5);
 
-        Mockito.when(mockPostRepository.get(Mockito.anyInt()))
-                .thenReturn(mockPost);
-
-        Mockito.when(mockLikeRepository.findByPostAndUser(Mockito.anyInt(), Mockito.anyInt()))
+        Mockito.when(mockLikeRepository.findByPostAndUser(9, mockUser.getId()))
                 .thenReturn(null);
 
         Assertions.assertThrows(
                 EntityNotFoundException.class,
-                () -> likeService.removeLike(1, mockUser)
+                () -> likeService.removeLike(9, mockUser)
         );
 
         Mockito.verify(mockLikeRepository, Mockito.never())

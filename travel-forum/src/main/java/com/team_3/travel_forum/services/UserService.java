@@ -19,8 +19,6 @@ public interface UserService {
 
     List<User> searchByFirstName(String firstName);
 
-    void create(User user);
-
     void update(int id, User user);
 
     void delete(int id);

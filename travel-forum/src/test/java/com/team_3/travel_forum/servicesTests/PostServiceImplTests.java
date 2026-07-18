@@ -27,6 +27,7 @@ public class PostServiceImplTests {
     @Test
     public void create_Should_CallRepository_When_UserIsNotBlocked() {
         User mockUser = createMockUser();
+        mockUser.setId(5);
         Post mockPost = createMockPost(mockUser);
 
         postService.create(mockPost, mockUser);
@@ -40,6 +41,7 @@ public class PostServiceImplTests {
     @Test
     public void create_Should_ThrowException_When_UserIsBlocked() {
         User mockUser = createMockUser();
+        mockUser.setId(5);
         mockUser.setBlocked(true);
         Post mockPost = createMockPost(mockUser);
 
@@ -55,6 +57,7 @@ public class PostServiceImplTests {
     @Test
     public void update_Should_CallRepository_When_UserIsOwner() {
         User owner = createMockUser();
+        owner.setId(5);
         Post existingPost = createMockPost(owner);
 
         Post updatedPost = createMockPost(owner);
@@ -72,12 +75,17 @@ public class PostServiceImplTests {
 
         Assertions.assertEquals("Updated post title", existingPost.getTitle());
         Assertions.assertEquals("Updated post content", existingPost.getContent());
+
+        Mockito.verify(mockPostRepository, Mockito.times(1))
+                .update(existingPost);
     }
 
     @Test
     public void update_Should_CallRepository_When_UserIsAdmin() {
         User owner = createMockUser();
+        owner.setId(5);
         User admin = createMockAdmin();
+        admin.setId(10);
         Post existingPost = createMockPost(owner);
 
         Post updatedPost = createMockPost(owner);
@@ -90,6 +98,9 @@ public class PostServiceImplTests {
 
         postService.update(updatedPost, admin);
 
+        Assertions.assertEquals("Updated post title", existingPost.getTitle());
+        Assertions.assertEquals("Updated post content", existingPost.getContent());
+
         Mockito.verify(mockPostRepository, Mockito.times(1))
                 .update(existingPost);
     }
@@ -97,11 +108,15 @@ public class PostServiceImplTests {
     @Test
     public void update_Should_ThrowException_When_UserIsNotOwnerOrAdmin() {
         User owner = createMockUser();
+        owner.setId(5);
         User otherUser = createOtherUser();
+        otherUser.setId(10);
         Post existingPost = createMockPost(owner);
 
         Post updatedPost = createMockPost(owner);
         updatedPost.setId(existingPost.getId());
+        updatedPost.setTitle("Updated post title");
+        updatedPost.setContent("Updated post content");
 
         Mockito.when(mockPostRepository.get(Mockito.anyInt()))
                 .thenReturn(existingPost);
@@ -118,6 +133,7 @@ public class PostServiceImplTests {
     @Test
     public void delete_Should_CallRepository_When_UserIsOwner() {
         User owner = createMockUser();
+        owner.setId(5);
         Post existingPost = createMockPost(owner);
 
         Mockito.when(mockPostRepository.get(Mockito.anyInt()))
@@ -132,7 +148,9 @@ public class PostServiceImplTests {
     @Test
     public void delete_Should_CallRepository_When_UserIsAdmin() {
         User owner = createMockUser();
+        owner.setId(5);
         User admin = createMockAdmin();
+        admin.setId(10);
         Post existingPost = createMockPost(owner);
 
         Mockito.when(mockPostRepository.get(Mockito.anyInt()))
@@ -147,7 +165,9 @@ public class PostServiceImplTests {
     @Test
     public void delete_Should_ThrowException_When_UserIsNotOwnerOrAdmin() {
         User owner = createMockUser();
+        owner.setId(5);
         User otherUser = createOtherUser();
+        otherUser.setId(10);
         Post existingPost = createMockPost(owner);
 
         Mockito.when(mockPostRepository.get(Mockito.anyInt()))

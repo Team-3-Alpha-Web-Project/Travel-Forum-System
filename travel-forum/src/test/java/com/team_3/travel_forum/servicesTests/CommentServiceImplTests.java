@@ -37,6 +37,8 @@ public class CommentServiceImplTests {
 
     @Test
     public void get_Should_ReturnComment_When_CommentExists() {
+        User owner = createMockUser();
+        owner.setId(5);
         Comment mockComment = createMockComment(createMockUser());
 
         Mockito.when(mockCommentRepository.get(Mockito.anyInt()))
@@ -50,6 +52,7 @@ public class CommentServiceImplTests {
     @Test
     public void getByPost_Should_ReturnComments_When_PostExists() {
         User mockUser = createMockUser();
+        mockUser.setId(5);
         Post mockPost = createMockPost(mockUser);
         List<Comment> comments = List.of(createMockComment(mockUser));
 
@@ -70,6 +73,7 @@ public class CommentServiceImplTests {
     @Test
     public void getByUser_Should_ReturnComments_When_UserExists() {
         User mockUser = createMockUser();
+        mockUser.setId(5);
         List<Comment> comments = List.of(createMockComment(mockUser));
 
         Mockito.when(mockUserRepository.get(Mockito.anyInt()))
@@ -89,6 +93,7 @@ public class CommentServiceImplTests {
     @Test
     public void create_Should_CallRepository_When_UserIsNotBlocked() {
         User mockUser = createMockUser();
+        mockUser.setId(5);
         Comment mockComment = createMockComment(mockUser);
 
         commentService.create(mockComment, mockUser);
@@ -100,6 +105,7 @@ public class CommentServiceImplTests {
     @Test
     public void create_Should_ThrowException_When_UserIsBlocked() {
         User mockUser = createMockUser();
+        mockUser.setId(5);
         mockUser.setBlocked(true);
         Comment mockComment = createMockComment(mockUser);
 
@@ -115,6 +121,7 @@ public class CommentServiceImplTests {
     @Test
     public void update_Should_CallRepository_When_UserIsOwner() {
         User owner = createMockUser();
+        owner.setId(5);
         Comment mockComment = createMockComment(owner);
         mockComment.setContent("Updated comment");
 
@@ -127,7 +134,9 @@ public class CommentServiceImplTests {
     @Test
     public void update_Should_CallRepository_When_UserIsAdmin() {
         User owner = createMockUser();
+        owner.setId(5);
         User admin = createMockAdmin();
+        admin.setId(10);
         Comment mockComment = createMockComment(owner);
         mockComment.setContent("Updated comment");
 
@@ -140,7 +149,9 @@ public class CommentServiceImplTests {
     @Test
     public void update_Should_ThrowException_When_UserIsNotOwnerOrAdmin() {
         User owner = createMockUser();
+        owner.setId(5);
         User otherUser = createOtherUser();
+        otherUser.setId(10);
         Comment mockComment = createMockComment(owner);
 
         Assertions.assertThrows(
@@ -155,6 +166,7 @@ public class CommentServiceImplTests {
     @Test
     public void update_Should_ThrowException_When_UserIsBlocked() {
         User owner = createMockUser();
+        owner.setId(5);
         owner.setBlocked(true);
         Comment mockComment = createMockComment(owner);
 
@@ -170,6 +182,7 @@ public class CommentServiceImplTests {
     @Test
     public void delete_Should_CallRepository_When_UserIsOwner() {
         User owner = createMockUser();
+        owner.setId(5);
         Comment mockComment = createMockComment(owner);
 
         Mockito.when(mockCommentRepository.get(Mockito.anyInt()))
@@ -184,7 +197,9 @@ public class CommentServiceImplTests {
     @Test
     public void delete_Should_CallRepository_When_UserIsAdmin() {
         User owner = createMockUser();
+        owner.setId(5);
         User admin = createMockAdmin();
+        admin.setId(10);
         Comment mockComment = createMockComment(owner);
 
         Mockito.when(mockCommentRepository.get(Mockito.anyInt()))
@@ -199,7 +214,9 @@ public class CommentServiceImplTests {
     @Test
     public void delete_Should_ThrowException_When_UserIsNotOwnerOrAdmin() {
         User owner = createMockUser();
+        owner.setId(5);
         User otherUser = createOtherUser();
+        otherUser.setId(10);
         Comment mockComment = createMockComment(owner);
 
         Mockito.when(mockCommentRepository.get(Mockito.anyInt()))
@@ -217,6 +234,7 @@ public class CommentServiceImplTests {
     @Test
     public void delete_Should_ThrowException_When_UserIsBlocked() {
         User owner = createMockUser();
+        owner.setId(5);
         owner.setBlocked(true);
         Comment mockComment = createMockComment(owner);
 
