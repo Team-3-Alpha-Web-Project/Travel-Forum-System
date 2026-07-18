@@ -1,6 +1,5 @@
 package com.team_3.travel_forum;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.team_3.travel_forum.models.*;
 import com.team_3.travel_forum.models.dtos.ChangePasswordDto;
 import com.team_3.travel_forum.models.dtos.RegisterUserDto;
