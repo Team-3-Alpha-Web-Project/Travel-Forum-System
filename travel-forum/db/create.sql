@@ -68,7 +68,8 @@ create table likes
     constraint unique_likes
         unique (user_id, post_id),
     constraint likes_posts_fk
-        foreign key (post_id) references posts (post_id),
+        foreign key (post_id) references posts (post_id)
+            on delete cascade,
     constraint likes_users_fk
         foreign key (user_id) references users (user_id)
 );

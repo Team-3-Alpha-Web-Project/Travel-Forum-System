@@ -56,22 +56,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void create(User user) {
-        if (userRepository.existsByUsername(user.getUsername())) {
-            throw new DuplicateEntityException("User", "username", user.getUsername());
-        }
-
-        if (userRepository.existsByEmail(user.getEmail())) {
-            throw new DuplicateEntityException("User", "email", user.getEmail());
-        }
-
-        user.setRole(Role.ROLE_USER);
-        user.setBlocked(false);
-
-        userRepository.create(user);
-    }
-
-    @Override
     public void update(int id, User user) {
         User userToUpdate = userRepository.get(id);
 
