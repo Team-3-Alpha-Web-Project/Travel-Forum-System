@@ -1,8 +1,5 @@
 package com.team_3.travel_forum.controllers.rest;
 
-import com.team_3.travel_forum.exceptions.BlockedUserException;
-import com.team_3.travel_forum.exceptions.EntityNotFoundException;
-import com.team_3.travel_forum.exceptions.UnauthorizedAccessException;
 import com.team_3.travel_forum.helpers.CommentMapper;
 import com.team_3.travel_forum.models.Comment;
 import com.team_3.travel_forum.models.User;
@@ -15,7 +12,6 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.security.Principal;
 import java.util.List;
@@ -23,8 +19,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/api")
 public class CommentRestController {
-
-    //TODO when happy with the Global Exceptions Controllers - delete the try-catch blocks and unused imports
 
     private final CommentService commentService;
     private final PostService postService;
@@ -44,12 +38,10 @@ public class CommentRestController {
 
     @GetMapping("/comments/{id}")
     public CommentResponseDto get(@PathVariable int id) {
-//        try {
-            Comment comment = commentService.get(id);
-            return commentMapper.toDto(comment);
-//        } catch (EntityNotFoundException e) {
-//            throw new ResponseStatusException(HttpStatus.NOT_FOUND,e.getMessage());
-//        }
+
+        Comment comment = commentService.get(id);
+
+        return commentMapper.toDto(comment);
     }
 
     @GetMapping("/posts/{postId}/comments")
@@ -80,19 +72,14 @@ public class CommentRestController {
             @PathVariable int postId,
             @Valid @RequestBody CommentRequestDto commentRequestDto,
             Principal principal) {
-//        try {
-            Comment comment = commentMapper.fromDto(commentRequestDto);
-            comment.setPost(postService.get(postId));
-            User currentUser = userService.get(principal.getName());
-            comment.setUser(currentUser);
 
-            commentService.create(comment, currentUser);
-            return commentMapper.toDto(comment);
-//        } catch (BlockedUserException e) {
-//            throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getMessage());
-//        } catch (EntityNotFoundException e) {
-//            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
-//        }
+        Comment comment = commentMapper.fromDto(commentRequestDto);
+        comment.setPost(postService.get(postId));
+        User currentUser = userService.get(principal.getName());
+        comment.setUser(currentUser);
+
+        commentService.create(comment, currentUser);
+        return commentMapper.toDto(comment);
     }
 
     @PutMapping("/comments/{commentId}")
@@ -101,16 +88,11 @@ public class CommentRestController {
             @Valid @RequestBody CommentRequestDto commentRequestDto,
             Principal principal) {
 
-//        try {
-            Comment comment = commentMapper.fromDto(commentId, commentRequestDto);
-            User currentUser = userService.get(principal.getName());
-            commentService.update(comment, currentUser);
-            return commentMapper.toDto(comment);
-//        } catch (BlockedUserException | UnauthorizedAccessException e) {
-//            throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getMessage());
-//        } catch (EntityNotFoundException e) {
-//            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
-//        }
+        Comment comment = commentMapper.fromDto(commentId, commentRequestDto);
+        User currentUser = userService.get(principal.getName());
+        commentService.update(comment, currentUser);
+
+        return commentMapper.toDto(comment);
     }
 
     @DeleteMapping("/comments/{commentId}")
@@ -118,14 +100,9 @@ public class CommentRestController {
     public void deleteComment(
             @PathVariable int commentId,
             Principal principal) {
-//        try {
-            User currentUser = userService.get(principal.getName());
-            commentService.delete(commentId, currentUser);
-//        } catch (BlockedUserException | UnauthorizedAccessException e) {
-//            throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getMessage());
-//        } catch (EntityNotFoundException e) {
-//            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
-//        }
+
+        User currentUser = userService.get(principal.getName());
+        commentService.delete(commentId, currentUser);
     }
 
 }
