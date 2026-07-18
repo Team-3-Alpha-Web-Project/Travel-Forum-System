@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<form th:replace="~{/fragments/page-layout.html :: head('Error Page')}"></form>
+<body>
+<form th:replace="~{/fragments/page-layout.html :: header}"></form>
+
+<div class="body-content">
+    <h2 class="label-error">
+        <span th:text="${statusCode}">HTTP Status Code</span>
+        <span th:text="${statusPhrase}">Error</span>
+    </h2>
+
+    <h3 class="error" th:text="${message}">Detailed error explanation goes here.</h3>
+
+    <p class="text-muted">Occurred at: <span th:text="${#temporals.format(timestamp, 'yyyy-MM-dd HH:mm:ss')}">Timestamp</span></p>
+</div>
+
+<form th:replace="~{fragments/page-layout.html :: footer}"></form>
+</body>
+</html>

@@ -24,6 +24,8 @@ import java.util.List;
 @RequestMapping("/api")
 public class CommentRestController {
 
+    //TODO when happy with the Global Exceptions Controllers - delete the try-catch blocks and unused imports
+
     private final CommentService commentService;
     private final PostService postService;
     private final CommentMapper commentMapper;
@@ -42,12 +44,12 @@ public class CommentRestController {
 
     @GetMapping("/comments/{id}")
     public CommentResponseDto get(@PathVariable int id) {
-        try {
+//        try {
             Comment comment = commentService.get(id);
             return commentMapper.toDto(comment);
-        } catch (EntityNotFoundException e) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND,e.getMessage());
-        }
+//        } catch (EntityNotFoundException e) {
+//            throw new ResponseStatusException(HttpStatus.NOT_FOUND,e.getMessage());
+//        }
     }
 
     @GetMapping("/posts/{postId}/comments")
@@ -78,7 +80,7 @@ public class CommentRestController {
             @PathVariable int postId,
             @Valid @RequestBody CommentRequestDto commentRequestDto,
             Principal principal) {
-        try {
+//        try {
             Comment comment = commentMapper.fromDto(commentRequestDto);
             comment.setPost(postService.get(postId));
             User currentUser = userService.get(principal.getName());
@@ -86,11 +88,11 @@ public class CommentRestController {
 
             commentService.create(comment, currentUser);
             return commentMapper.toDto(comment);
-        } catch (BlockedUserException e) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getMessage());
-        } catch (EntityNotFoundException e) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
-        }
+//        } catch (BlockedUserException e) {
+//            throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getMessage());
+//        } catch (EntityNotFoundException e) {
+//            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+//        }
     }
 
     @PutMapping("/comments/{commentId}")
@@ -99,16 +101,16 @@ public class CommentRestController {
             @Valid @RequestBody CommentRequestDto commentRequestDto,
             Principal principal) {
 
-        try {
+//        try {
             Comment comment = commentMapper.fromDto(commentId, commentRequestDto);
             User currentUser = userService.get(principal.getName());
             commentService.update(comment, currentUser);
             return commentMapper.toDto(comment);
-        } catch (BlockedUserException | UnauthorizedAccessException e) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getMessage());
-        } catch (EntityNotFoundException e) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
-        } 
+//        } catch (BlockedUserException | UnauthorizedAccessException e) {
+//            throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getMessage());
+//        } catch (EntityNotFoundException e) {
+//            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+//        }
     }
 
     @DeleteMapping("/comments/{commentId}")
@@ -116,14 +118,14 @@ public class CommentRestController {
     public void deleteComment(
             @PathVariable int commentId,
             Principal principal) {
-        try {
+//        try {
             User currentUser = userService.get(principal.getName());
             commentService.delete(commentId, currentUser);
-        } catch (BlockedUserException | UnauthorizedAccessException e) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getMessage());
-        } catch (EntityNotFoundException e) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
-        }
+//        } catch (BlockedUserException | UnauthorizedAccessException e) {
+//            throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getMessage());
+//        } catch (EntityNotFoundException e) {
+//            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+//        }
     }
 
 }
