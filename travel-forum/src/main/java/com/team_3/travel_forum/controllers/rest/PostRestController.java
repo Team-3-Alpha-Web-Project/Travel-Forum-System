@@ -87,4 +87,18 @@ public class PostRestController {
         User currentUser = userService.get(principal.getName());
         postService.delete(id, currentUser);
     }
+
+    @GetMapping("/top-commented")
+    public List<PostResponseDTO> getTop10MostCommented() {
+        List<Post> posts = postService.getTop10MostCommented();
+
+        return postMapper.toDto(posts);
+    }
+
+    @GetMapping("/recent")
+    public List<PostResponseDTO> getTop10Recent() {
+        List<Post> posts = postService.getTop10Recent();
+
+        return postMapper.toDto(posts);
+    }
 }
