@@ -57,10 +57,6 @@ public class Helpers {
         return post;
     }
 
-    public static Comment createMockComment() {
-        return createMockComment(createMockUser());
-    }
-
     public static Comment createMockComment(User user) {
         Comment comment = new Comment();
         comment.setId(1);
@@ -68,14 +64,6 @@ public class Helpers {
         comment.setUser(user);
         comment.setPost(createMockPost(user));
         return comment;
-    }
-
-    public static Like createMockLike() {
-        Like like = new Like();
-        like.setId(1);
-        like.setUser(createMockUser());
-        like.setPost(createMockPost());
-        return like;
     }
 
     public static ChangePasswordDto createChangePasswordDto() {
@@ -104,13 +92,5 @@ public class Helpers {
         user.setEmail("updated@test.com");
         user.setProfilePhotoUrl("updated-photo-url");
         return user;
-    }
-
-    public static String toJson(final Object obj) {
-        try {
-            return new ObjectMapper().writeValueAsString(obj);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
     }
 }
