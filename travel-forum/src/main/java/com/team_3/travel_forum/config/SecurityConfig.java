@@ -40,7 +40,8 @@ public class SecurityConfig {
                                 HttpMethod.GET,
                                 "/api/stats",
                                 "/api/posts/recent",
-                                "/api/posts/top-commented"
+                                "/api/posts/top-commented",
+                                "/api/posts/*/likes/count"
                         ).permitAll()
 
                         /*
@@ -81,6 +82,11 @@ public class SecurityConfig {
                         .requestMatchers(
                                 HttpMethod.PUT,
                                 "/api/users/me"
+                        ).authenticated()
+
+                        .requestMatchers(
+                                HttpMethod.PATCH,
+                                "/api/users/me/password"
                         ).authenticated()
 
                         /*

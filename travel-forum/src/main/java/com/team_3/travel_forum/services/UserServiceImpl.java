@@ -3,6 +3,7 @@ package com.team_3.travel_forum.services;
 import com.team_3.travel_forum.exceptions.DuplicateEntityException;
 import com.team_3.travel_forum.models.Role;
 import com.team_3.travel_forum.models.User;
+import com.team_3.travel_forum.models.dtos.ChangePasswordDto;
 import com.team_3.travel_forum.models.dtos.RegisterUserDto;
 import com.team_3.travel_forum.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -145,5 +146,22 @@ public class UserServiceImpl implements UserService {
     @Override
     public long countAllUsers() {
         return userRepository.countAllUsers();
+    }
+
+    @Override
+    public void changePassword(String username, ChangePasswordDto dto) {
+        User user = userRepository.get(username);
+
+        if (!passwordEncoder.matches(dto.getCurrentPassword(), user.getPassword())) {
+            throw new IllegalArgumentException("Current password is incorrect.");
+        }
+
+        if (!dto.getNewPassword().equals(dto.getConfirmPassword())) {
+            throw new IllegalArgumentException("New passwords do not match.");
+        }
+
+        user.setPassword(passwordEncoder.encode(dto.getNewPassword()));
+
+        userRepository.update(user);
     }
 }
