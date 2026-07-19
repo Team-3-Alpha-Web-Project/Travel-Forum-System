@@ -17,6 +17,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
+import java.util.ArrayList;
 
 @ExtendWith(MockitoExtension.class)
 public class PostServiceImplTests {
@@ -194,6 +195,27 @@ public class PostServiceImplTests {
     }
 
     @Test
+    public void update_Should_ThrowException_When_UserIsBlocked() {
+        User mockUser = createMockUser();
+        mockUser.setId(5);
+        mockUser.setBlocked(true);
+
+        Post existingPost = createMockPost(mockUser);
+        Post updatedPost = createMockPost(mockUser);
+        updatedPost.setId(existingPost.getId());
+        updatedPost.setTitle("Updated post title");
+        updatedPost.setContent("Updated post content");
+
+        Assertions.assertThrows(
+                BlockedUserException.class,
+                () -> postService.update(updatedPost, mockUser)
+        );
+
+        Mockito.verify(mockPostRepository, Mockito.never())
+                .update(Mockito.any(Post.class));
+    }
+
+    @Test
     public void delete_Should_CallRepository_When_UserIsOwner() {
         User owner = createMockUser();
         owner.setId(5);
@@ -246,6 +268,21 @@ public class PostServiceImplTests {
     }
 
     @Test
+    public void delete_Should_ThrowException_When_UserIsBlocked() {
+        User mockUser = createMockUser();
+        mockUser.setId(5);
+        mockUser.setBlocked(true);
+
+        Assertions.assertThrows(
+                BlockedUserException.class,
+                () -> postService.delete(1, mockUser)
+        );
+
+        Mockito.verify(mockPostRepository, Mockito.never())
+                .delete(Mockito.anyInt());
+    }
+
+    @Test
     public void countAll_Posts_Should_Return_Valid_Number() {
         List<Post> mockPosts = List.of(createMockPost());
         Mockito.when(mockPostRepository.countAllPosts())
@@ -254,5 +291,82 @@ public class PostServiceImplTests {
         Assertions.assertEquals(mockPosts.size(), postService.countAllPosts());
 
         Mockito.verify(mockPostRepository, Mockito.times(1)).countAllPosts();
+    }
+
+    @Test
+    public void countAllPosts_Should_Return_0_When_NoPostsExist() {
+        long expectedCount = 0L;
+        Mockito.when(mockPostRepository.countAllPosts()).thenReturn(expectedCount);
+
+        long actualCount = postService.countAllPosts();
+
+        Assertions.assertEquals(expectedCount, actualCount);
+        Mockito.verify(mockPostRepository,
+                Mockito.times(1))
+                .countAllPosts();
+    }
+
+    @Test
+    public void getTop10MostCommented_Should_ReturnListOfPosts_When_PostsExist() {
+        Post mockPost1 = createMockPost();
+        Post mockPost2 = createMockPost();
+        List<Post> mockList = new ArrayList<>();
+        mockList.add(mockPost1);
+        mockList.add(mockPost2);
+
+        Mockito.when(mockPostRepository.getTop10MostCommented()).thenReturn(mockList);
+
+        List<Post> actualList = postService.getTop10MostCommented();
+
+        Assertions.assertEquals(mockList, actualList);
+        Mockito.verify(mockPostRepository,
+                Mockito.times(1))
+                .getTop10MostCommented();
+    }
+
+    @Test
+    public void getTop10MostCommented_Should_ReturnEmptyList_When_NoPosts() {
+        List<Post> mockList = new ArrayList<>();
+
+        Mockito.when(mockPostRepository.getTop10MostCommented()).thenReturn(mockList);
+
+        List<Post> actualList = postService.getTop10MostCommented();
+
+        Assertions.assertTrue(actualList.isEmpty());
+        Mockito.verify(mockPostRepository,
+                        Mockito.times(1))
+                .getTop10MostCommented();
+    }
+
+    @Test
+    public void getTop10Recent_Should_ReturnListOfPosts_When_PostsExist() {
+        Post mockPost1 = createMockPost();
+        Post mockPost2 = createMockPost();
+        List<Post> mockList = new ArrayList<>();
+        mockList.add(mockPost1);
+        mockList.add(mockPost2);
+
+        Mockito.when(mockPostRepository.getTop10Recent()).thenReturn(mockList);
+
+        List<Post> actualList = postService.getTop10Recent();
+
+        Assertions.assertEquals(mockList, actualList);
+        Mockito.verify(mockPostRepository,
+                        Mockito.times(1))
+                .getTop10Recent();
+    }
+
+    @Test
+    public void getTop10Recent_Should_ReturnEmptyList_When_NoPostsExist() {
+        List<Post> mockList = new ArrayList<>();
+
+        Mockito.when(mockPostRepository.getTop10Recent()).thenReturn(mockList);
+
+        List<Post> actualList = postService.getTop10Recent();
+
+        Assertions.assertTrue(actualList.isEmpty());
+        Mockito.verify(mockPostRepository,
+                        Mockito.times(1))
+                .getTop10Recent();
     }
 }

@@ -2,6 +2,7 @@ package com.team_3.travel_forum.servicesTests;
 
 import static com.team_3.travel_forum.Helpers.*;
 import com.team_3.travel_forum.exceptions.BlockedUserException;
+import com.team_3.travel_forum.exceptions.EntityNotFoundException;
 import com.team_3.travel_forum.exceptions.UnauthorizedAccessException;
 import com.team_3.travel_forum.models.Comment;
 import com.team_3.travel_forum.models.Post;
@@ -50,6 +51,15 @@ public class CommentServiceImplTests {
     }
 
     @Test
+    public void get_Should_ThrowException_When_CommentDoesNotExist() {
+        int commentId = 300;
+        Mockito.when(mockCommentRepository.get(commentId))
+                .thenThrow(new EntityNotFoundException("Comment"));
+
+        Assertions.assertThrows(EntityNotFoundException.class, () -> commentService.get(commentId));
+    }
+
+    @Test
     public void getByPost_Should_ReturnComments_When_PostExists() {
         User mockUser = createMockUser();
         mockUser.setId(5);
@@ -71,6 +81,18 @@ public class CommentServiceImplTests {
     }
 
     @Test
+    public void getByPost_Should_ThrowException_When_PostDoesNotExist() {
+        int postId = 300;
+        User mockUser = createMockUser();
+        mockUser.setId(5);
+        Mockito.when(mockPostRepository.get(postId))
+                .thenThrow(new EntityNotFoundException("Post"));
+
+        Assertions.assertThrows(EntityNotFoundException.class,
+                () -> commentService.getByPost(postId, mockUser));
+    }
+
+    @Test
     public void getByUser_Should_ReturnComments_When_UserExists() {
         User mockUser = createMockUser();
         mockUser.setId(5);
@@ -88,6 +110,19 @@ public class CommentServiceImplTests {
 
         Mockito.verify(mockCommentRepository, Mockito.times(1))
                 .searchByUser(1);
+    }
+
+    @Test
+    public void getByUser_Should_ThrowException_When_UserDoesNotExist() {
+        int userId = 5;
+        User mockUser = createMockUser();
+        mockUser.setId(userId);
+        Mockito.when(mockUserRepository.get(userId)).thenThrow(new EntityNotFoundException("User"));
+
+        Assertions.assertThrows(EntityNotFoundException.class,
+                () -> commentService.getByUser(userId, mockUser));
+        Mockito.verify(mockUserRepository, Mockito.times(1))
+                .get(userId);
     }
 
     @Test
@@ -125,6 +160,8 @@ public class CommentServiceImplTests {
         Comment mockComment = createMockComment(owner);
         mockComment.setContent("Updated comment");
 
+        Mockito.when(mockCommentRepository.get(mockComment.getId())).thenReturn(mockComment);
+
         commentService.update(mockComment, owner);
 
         Mockito.verify(mockCommentRepository, Mockito.times(1))
@@ -140,6 +177,9 @@ public class CommentServiceImplTests {
         Comment mockComment = createMockComment(owner);
         mockComment.setContent("Updated comment");
 
+        Mockito.when(mockCommentRepository.get(mockComment.getId()))
+                .thenReturn(mockComment);
+
         commentService.update(mockComment, admin);
 
         Mockito.verify(mockCommentRepository, Mockito.times(1))
@@ -153,6 +193,9 @@ public class CommentServiceImplTests {
         User otherUser = createOtherUser();
         otherUser.setId(10);
         Comment mockComment = createMockComment(owner);
+
+        Mockito.when(mockCommentRepository.get(mockComment.getId()))
+                .thenReturn(mockComment);
 
         Assertions.assertThrows(
                 UnauthorizedAccessException.class,
@@ -263,5 +306,34 @@ public class CommentServiceImplTests {
         long result = commentService.countByPost(1);
 
         Assertions.assertEquals(3L, result);
+    }
+
+    @Test
+    public void countByPost_Should_ThrowException_When_PostDoesNotExist() {
+        int postId = 500;
+
+        Mockito.when(mockPostRepository.get(postId))
+                .thenThrow(new EntityNotFoundException("Post"));
+
+        Assertions.assertThrows(EntityNotFoundException.class,
+                () -> commentService.countByPost(postId));
+        Mockito.verify(mockCommentRepository, Mockito.never())
+                .countByPost(postId);
+    }
+
+    @Test
+    public void countByPost_Should_Return0_When_NoCommentsExist() {
+        Post mockPost = createMockPost(createMockUser());
+        long expectedCount = 0L;
+
+        Mockito.when(mockPostRepository.get(Mockito.anyInt()))
+                .thenReturn(mockPost);
+
+        Mockito.when(mockCommentRepository.countByPost(Mockito.anyInt()))
+                .thenReturn(expectedCount);
+
+        long result = commentService.countByPost(1);
+
+        Assertions.assertEquals(expectedCount, result);
     }
 }

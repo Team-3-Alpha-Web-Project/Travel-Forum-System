@@ -60,12 +60,14 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public void update(Comment comment, User currentUser) {
         if (currentUser.isBlocked()) {
-            throw new BlockedUserException("Your account has been blocked and you cannot post comments.");
+            throw new BlockedUserException("Your account has been blocked and you cannot update comments.");
         }
 
-        checkModifyPermissions(comment, currentUser);
+        Comment existingComment = commentRepository.get(comment.getId());
+        checkModifyPermissions(existingComment, currentUser);
 
-        commentRepository.update(comment);
+        existingComment.setContent(comment.getContent());
+        commentRepository.update(existingComment);
     }
 
     @Override
@@ -73,7 +75,7 @@ public class CommentServiceImpl implements CommentService {
         Comment commentToDelete = commentRepository.get(commentId);
 
         if (currentUser.isBlocked()) {
-            throw new BlockedUserException("Your account has been blocked and you cannot post comments.");
+            throw new BlockedUserException("Your account has been blocked and you cannot delete comments.");
         }
 
         checkModifyPermissions(commentToDelete, currentUser);
