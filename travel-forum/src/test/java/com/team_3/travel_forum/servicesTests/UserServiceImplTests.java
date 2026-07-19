@@ -286,6 +286,23 @@ public class UserServiceImplTests {
     }
 
     @Test
+    public void update_Should_ThrowException_When_UsernameIsProvided() {
+        User updatedUser = createUpdatedUser();
+        updatedUser.setUsername("newUsername");
+
+        Assertions.assertThrows(
+                IllegalArgumentException.class,
+                () -> userService.update(1, updatedUser)
+        );
+
+        Mockito.verify(mockUserRepository, Mockito.never())
+                .get(Mockito.anyInt());
+
+        Mockito.verify(mockUserRepository, Mockito.never())
+                .update(Mockito.any(User.class));
+    }
+
+    @Test
     public void update_Should_ThrowException_When_EmailIsAlreadyTaken() {
         User existingUser = createMockUser();
         User updatedUser = createUpdatedUser();

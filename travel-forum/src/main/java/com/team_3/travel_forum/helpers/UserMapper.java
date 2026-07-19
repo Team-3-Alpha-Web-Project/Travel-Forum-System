@@ -38,6 +38,7 @@ public class UserMapper {
         user.setLastName(dto.getLastName());
         user.setEmail(dto.getEmail());
         user.setProfilePhotoUrl(dto.getProfilePhotoUrl());
+        user.setUsername(dto.getUsername());
 
         return user;
     }
