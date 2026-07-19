@@ -6,6 +6,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name = "posts")
@@ -79,5 +80,17 @@ public class Post {
 
     public void setComments(List<Comment> comments) {
         this.comments = comments;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Post post = (Post) o;
+        return id == post.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }
