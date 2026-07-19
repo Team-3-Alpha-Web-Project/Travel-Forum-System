@@ -2,6 +2,7 @@ package com.team_3.travel_forum.servicesTests;
 
 import static com.team_3.travel_forum.Helpers.*;
 import com.team_3.travel_forum.exceptions.DuplicateEntityException;
+import com.team_3.travel_forum.exceptions.EntityNotFoundException;
 import com.team_3.travel_forum.models.Role;
 import com.team_3.travel_forum.models.User;
 import com.team_3.travel_forum.models.dtos.ChangePasswordDto;
@@ -17,6 +18,8 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.util.List;
+
 @ExtendWith(MockitoExtension.class)
 public class UserServiceImplTests {
 
@@ -28,6 +31,114 @@ public class UserServiceImplTests {
 
     @InjectMocks
     UserServiceImpl userService;
+
+    @Test
+    public void get_Should_ReturnAllUsers_When_UsersExist() {
+        List<User> mockUsers = List.of(createMockUser());
+
+        Mockito.when(mockUserRepository.get())
+                .thenReturn(mockUsers);
+
+        List<User> result = userService.get();
+
+        Assertions.assertEquals(mockUsers, result);
+
+        Mockito.verify(mockUserRepository, Mockito.times(1))
+                .get();
+    }
+
+    @Test
+    public void get_Should_ThrowException_When_UserDoesNotExist() {
+        Mockito.when(mockUserRepository.get(1))
+                .thenThrow(new EntityNotFoundException("User"));
+
+        Assertions.assertThrows(
+                EntityNotFoundException.class,
+                () -> userService.get(1)
+        );
+
+        Mockito.verify(mockUserRepository, Mockito.times(1))
+                .get(1);
+    }
+
+    @Test
+    public void getByUsername_Should_ReturnUser_When_UserExists() {
+        User mockUser = createMockUser();
+
+        Mockito.when(mockUserRepository.get("testuser"))
+                .thenReturn(mockUser);
+
+        User result = userService.get("testuser");
+
+        Assertions.assertEquals(mockUser, result);
+
+        Mockito.verify(mockUserRepository, Mockito.times(1))
+                .get("testuser");
+    }
+
+    @Test
+    public void getByUsername_Should_ThrowException_When_UserDoesNotExist() {
+        String username = "missinguser";
+
+        Mockito.when(mockUserRepository.get(username))
+                .thenThrow(new EntityNotFoundException("User", "username", username));
+
+        Assertions.assertThrows(
+                EntityNotFoundException.class,
+                () -> userService.get(username)
+        );
+
+        Mockito.verify(mockUserRepository, Mockito.times(1))
+                .get(username);
+    }
+
+    @Test
+    public void searchByUsername_Should_ReturnUsers_When_UsersExist() {
+        String username = "test";
+        List<User> mockUsers = List.of(createMockUser());
+
+        Mockito.when(mockUserRepository.searchByUsername(username))
+                .thenReturn(mockUsers);
+
+        List<User> result = userService.searchByUsername(username);
+
+        Assertions.assertEquals(mockUsers, result);
+
+        Mockito.verify(mockUserRepository, Mockito.times(1))
+                .searchByUsername(username);
+    }
+
+    @Test
+    public void searchByEmail_Should_ReturnUsers_When_UsersExist() {
+        String email = "test@test.com";
+        List<User> mockUsers = List.of(createMockUser());
+
+        Mockito.when(mockUserRepository.searchByEmail(email))
+                .thenReturn(mockUsers);
+
+        List<User> result = userService.searchByEmail(email);
+
+        Assertions.assertEquals(mockUsers, result);
+
+        Mockito.verify(mockUserRepository, Mockito.times(1))
+                .searchByEmail(email);
+    }
+
+    @Test
+    public void searchByFirstName_Should_ReturnUsers_When_UsersExist() {
+        String firstName = "Test";
+        List<User> mockUsers = List.of(createMockUser());
+
+        Mockito.when(mockUserRepository.searchByFirstName(firstName))
+                .thenReturn(mockUsers);
+
+        List<User> result = userService.searchByFirstName(firstName);
+
+        Assertions.assertEquals(mockUsers, result);
+
+        Mockito.verify(mockUserRepository, Mockito.times(1))
+                .searchByFirstName(firstName);
+    }
 
     @Test
     public void changePassword_Should_UpdatePassword_When_RequestIsValid() {
@@ -192,6 +303,14 @@ public class UserServiceImplTests {
 
         Mockito.verify(mockUserRepository, Mockito.never())
                 .update(Mockito.any(User.class));
+    }
+
+    @Test
+    public void delete_Should_CallRepository() {
+        userService.delete(1);
+
+        Mockito.verify(mockUserRepository, Mockito.times(1))
+                .delete(1);
     }
 
     @Test
