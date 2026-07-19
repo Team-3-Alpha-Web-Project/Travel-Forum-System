@@ -2,6 +2,7 @@ package com.team_3.travel_forum.servicesTests;
 
 import static com.team_3.travel_forum.Helpers.*;
 import com.team_3.travel_forum.exceptions.BlockedUserException;
+import com.team_3.travel_forum.exceptions.EntityNotFoundException;
 import com.team_3.travel_forum.exceptions.UnauthorizedAccessException;
 import com.team_3.travel_forum.models.Post;
 import com.team_3.travel_forum.models.User;
@@ -15,6 +16,9 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.List;
+import java.util.ArrayList;
+
 @ExtendWith(MockitoExtension.class)
 public class PostServiceImplTests {
 
@@ -23,6 +27,57 @@ public class PostServiceImplTests {
 
     @InjectMocks
     PostServiceImpl postService;
+
+    @Test
+    public void get_Should_ReturnAllPosts() {
+        List<Post> mockPosts = List.of(createMockPost());
+        Mockito.when(mockPostRepository.get())
+                .thenReturn(mockPosts);
+
+        Assertions.assertEquals(mockPosts, postService.get());
+    }
+
+    @Test
+    public void get_Should_ReturnPost_When_PostExists() {
+        Post mockPost = createMockPost();
+        Mockito.when(mockPostRepository.get(Mockito.anyInt()))
+                        .thenReturn(mockPost);
+
+        Assertions.assertEquals(mockPost, postService.get(1));
+
+    }
+
+    @Test
+    public void get_Should_Throw_When_Post_NotExists() {
+        Mockito.when(mockPostRepository.get(1))
+                .thenThrow(new EntityNotFoundException("Post"));
+
+        Assertions.assertThrows(EntityNotFoundException.class, () -> postService.get(1));
+
+    }
+
+    @Test
+    public void get_By_User_Should_ReturnPost_When_PostExists() {
+        User mockUser = createMockUser();
+        List<Post> mockPosts = List.of(createMockPost());
+
+        Mockito.when(mockPostRepository.getByUser(mockUser.getId()))
+                .thenReturn(mockPosts);
+
+        Assertions.assertEquals(mockPosts, postService.getByUser(mockUser.getId()));
+
+    }
+
+    @Test
+    public void search_Should_ReturnPosts_When_KeywordExists() {
+        List<Post> mockPosts = List.of(createMockPost());
+
+        Mockito.when(mockPostRepository.search("London", "mostLiked"))
+                .thenReturn(mockPosts);
+
+        Assertions.assertEquals(mockPosts, postService.search("London", "mostLiked"));
+    }
+
 
     @Test
     public void create_Should_CallRepository_When_UserIsNotBlocked() {
@@ -180,5 +235,91 @@ public class PostServiceImplTests {
 
         Mockito.verify(mockPostRepository, Mockito.never())
                 .delete(Mockito.anyInt());
+    }
+
+    @Test
+    public void countAll_Posts_Should_Return_Valid_Number() {
+        List<Post> mockPosts = List.of(createMockPost());
+        Mockito.when(mockPostRepository.countAllPosts())
+                .thenReturn((long) mockPosts.size());
+
+        Assertions.assertEquals(mockPosts.size(), postService.countAllPosts());
+    }
+
+    @Test
+    public void countAllPosts_Should_Return_0_When_NoPostsExist() {
+        long expectedCount = 0L;
+        Mockito.when(mockPostRepository.countAllPosts()).thenReturn(expectedCount);
+
+        long actualCount = postService.countAllPosts();
+
+        Assertions.assertEquals(expectedCount, actualCount);
+        Mockito.verify(mockPostRepository,
+                Mockito.times(1))
+                .countAllPosts();
+    }
+
+    @Test
+    public void getTop10MostCommented_Should_ReturnListOfPosts_When_PostsExist() {
+        Post mockPost1 = createMockPost();
+        Post mockPost2 = createMockPost();
+        List<Post> mockList = new ArrayList<>();
+        mockList.add(mockPost1);
+        mockList.add(mockPost2);
+
+        Mockito.when(mockPostRepository.getTop10MostCommented()).thenReturn(mockList);
+
+        List<Post> actualList = postService.getTop10MostCommented();
+
+        Assertions.assertEquals(mockList, actualList);
+        Mockito.verify(mockPostRepository,
+                Mockito.times(1))
+                .getTop10MostCommented();
+    }
+
+    @Test
+    public void getTop10MostCommented_Should_ReturnEmptyList_When_NoPosts() {
+        List<Post> mockList = new ArrayList<>();
+
+        Mockito.when(mockPostRepository.getTop10MostCommented()).thenReturn(mockList);
+
+        List<Post> actualList = postService.getTop10MostCommented();
+
+        Assertions.assertTrue(actualList.isEmpty());
+        Mockito.verify(mockPostRepository,
+                        Mockito.times(1))
+                .getTop10MostCommented();
+    }
+
+    @Test
+    public void getTop10Recent_Should_ReturnListOfPosts_When_PostsExist() {
+        Post mockPost1 = createMockPost();
+        Post mockPost2 = createMockPost();
+        List<Post> mockList = new ArrayList<>();
+        mockList.add(mockPost1);
+        mockList.add(mockPost2);
+
+        Mockito.when(mockPostRepository.getTop10Recent()).thenReturn(mockList);
+
+        List<Post> actualList = postService.getTop10Recent();
+
+        Assertions.assertEquals(mockList, actualList);
+        Mockito.verify(mockPostRepository,
+                        Mockito.times(1))
+                .getTop10Recent();
+    }
+
+    @Test
+    public void getTop10Recent_Should_ReturnEmptyList_When_NoPostsExist() {
+        List<Post> mockList = new ArrayList<>();
+
+        Mockito.when(mockPostRepository.getTop10Recent()).thenReturn(mockList);
+
+        List<Post> actualList = postService.getTop10Recent();
+
+        Assertions.assertTrue(actualList.isEmpty());
+        Mockito.verify(mockPostRepository,
+                        Mockito.times(1))
+                .getTop10Recent();
     }
 }

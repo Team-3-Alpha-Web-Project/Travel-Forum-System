@@ -239,4 +239,30 @@ public class UserServiceImplTests {
         Mockito.verify(mockUserRepository, Mockito.times(1))
                 .update(mockUser);
     }
+
+    @Test
+    public void countAllUsers_Should_ReturnCount_When_UsersExist() {
+        long expectedCount = 30L;
+        Mockito.when(mockUserRepository.countAllUsers()).thenReturn(expectedCount);
+
+        long actualCount = userService.countAllUsers();
+
+        Assertions.assertEquals(expectedCount, actualCount);
+        Mockito.verify(mockUserRepository,
+                Mockito.times(1))
+                .countAllUsers();
+    }
+
+    @Test
+    public void countAllUsers_Should_Return0_When_NoUsersExist() {
+        long expectedCount = 0L;
+        Mockito.when(mockUserRepository.countAllUsers()).thenReturn(expectedCount);
+
+        long actualCount = userService.countAllUsers();
+
+        Assertions.assertEquals(expectedCount, actualCount);
+        Mockito.verify(mockUserRepository,
+                Mockito.times(1))
+                .countAllUsers();
+    }
 }

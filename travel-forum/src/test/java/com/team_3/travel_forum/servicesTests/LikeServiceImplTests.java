@@ -144,4 +144,17 @@ public class LikeServiceImplTests {
 
         Assertions.assertEquals(5L, result);
     }
+
+    @Test
+    public void countByPost_Should_ThrowException_When_PostDoesNotExist() {
+        int postId = 400;
+
+        Mockito.when(mockPostRepository.get(postId))
+                .thenThrow(new EntityNotFoundException("Post"));
+
+        Assertions.assertThrows(EntityNotFoundException.class,
+                () -> likeService.countByPost(postId));
+
+        Mockito.verify(mockLikeRepository, Mockito.never()).countByPost(postId);
+    }
 }
