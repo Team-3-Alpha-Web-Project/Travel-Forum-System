@@ -106,11 +106,6 @@ public class SecurityConfig {
                         ).hasRole("ADMIN")
 
                         .requestMatchers(
-                                HttpMethod.DELETE,
-                                "/api/users/*"
-                        ).hasRole("ADMIN")
-
-                        .requestMatchers(
                                 HttpMethod.PATCH,
                                 "/api/users/*/block",
                                 "/api/users/*/unblock",

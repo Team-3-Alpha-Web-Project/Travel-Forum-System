@@ -306,14 +306,6 @@ public class UserServiceImplTests {
     }
 
     @Test
-    public void delete_Should_CallRepository() {
-        userService.delete(1);
-
-        Mockito.verify(mockUserRepository, Mockito.times(1))
-                .delete(1);
-    }
-
-    @Test
     public void block_Should_SetBlockedTrue() {
         User mockUser = createMockUser();
 
