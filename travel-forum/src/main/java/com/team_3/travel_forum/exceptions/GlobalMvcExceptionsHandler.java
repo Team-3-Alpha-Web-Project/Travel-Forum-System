@@ -5,8 +5,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
-
 import java.time.LocalDateTime;
 
 @ControllerAdvice(basePackages = "com.team_3.travel_forum.controllers.mvc")
@@ -26,6 +24,12 @@ public class GlobalMvcExceptionsHandler {
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public String handleNotFound(EntityNotFoundException ex, Model model) {
         return buildErrorView(HttpStatus.NOT_FOUND, ex.getMessage(), model);
+    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public String handleIllegalArgument(IllegalArgumentException ex, Model model) {
+        return buildErrorView(HttpStatus.BAD_REQUEST, ex.getMessage(), model);
     }
 
     @ExceptionHandler(Exception.class)
