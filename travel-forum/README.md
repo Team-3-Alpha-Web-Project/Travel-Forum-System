@@ -96,7 +96,7 @@ Built by **Team 3** — [@AllyVA](https://github.com/AllyVA), [@stefanova-kalina
 
 ## Database Schema
 
-![Entity-Relationship Diagram](docs/images/er-diagram.png)
+![Entity-Relationship Diagram](docs/er-diagram.png)
 
 The schema centers on a `users` table, with `posts`, `comments`, `likes`, and `phone_numbers` each referencing `user_id`. `comments` and `likes` also reference `post_id`, and both cascade-delete when their parent post is removed.
 
