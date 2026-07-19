@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head th:fragment="head(title)">
     <meta charset="UTF-8">
-    <title th:text="'TravelTipster | '+ ${title}">Title</title>
+    <title th:text="'TravelTalk| '+ ${title}">Title</title>
     <link href="../../static/css/styles.css" th:href="@{/css/styles.css}" rel="stylesheet"/>
 </head>
 <header th:fragment="header">
@@ -20,6 +20,6 @@
     </div>
 </header>
 <footer th:fragment="footer">
-    <small th:text="${'© Copyright ' + #dates.year(#dates.createNow()) + ' TravelTipster'}">TravelTipster</small>
+    <small th:text="${'© Copyright ' + #dates.year(#dates.createNow()) + ' TravelTalk'}">TravelTalk</small>
 </footer>
 </html>
