@@ -52,6 +52,9 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public void update(Post post, User currentUser) {
+        if (currentUser.isBlocked()) {
+            throw new BlockedUserException("Blocked users cannot update posts.");
+        }
         Post existing = postRepository.get(post.getId());
         checkModifyPermissions(existing, currentUser);
 
@@ -62,6 +65,9 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public void delete(int id, User currentUser) {
+        if (currentUser.isBlocked()) {
+            throw new BlockedUserException("Blocked users cannot delete posts.");
+        }
         Post existing = postRepository.get(id);
         checkModifyPermissions(existing, currentUser);
         postRepository.delete(id);

@@ -160,6 +160,8 @@ public class CommentServiceImplTests {
         Comment mockComment = createMockComment(owner);
         mockComment.setContent("Updated comment");
 
+        Mockito.when(mockCommentRepository.get(mockComment.getId())).thenReturn(mockComment);
+
         commentService.update(mockComment, owner);
 
         Mockito.verify(mockCommentRepository, Mockito.times(1))
@@ -175,6 +177,9 @@ public class CommentServiceImplTests {
         Comment mockComment = createMockComment(owner);
         mockComment.setContent("Updated comment");
 
+        Mockito.when(mockCommentRepository.get(mockComment.getId()))
+                .thenReturn(mockComment);
+
         commentService.update(mockComment, admin);
 
         Mockito.verify(mockCommentRepository, Mockito.times(1))
@@ -188,6 +193,9 @@ public class CommentServiceImplTests {
         User otherUser = createOtherUser();
         otherUser.setId(10);
         Comment mockComment = createMockComment(owner);
+
+        Mockito.when(mockCommentRepository.get(mockComment.getId()))
+                .thenReturn(mockComment);
 
         Assertions.assertThrows(
                 UnauthorizedAccessException.class,

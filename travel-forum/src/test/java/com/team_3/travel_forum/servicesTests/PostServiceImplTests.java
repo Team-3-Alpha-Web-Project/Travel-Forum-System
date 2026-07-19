@@ -186,6 +186,27 @@ public class PostServiceImplTests {
     }
 
     @Test
+    public void update_Should_ThrowException_When_UserIsBlocked() {
+        User mockUser = createMockUser();
+        mockUser.setId(5);
+        mockUser.setBlocked(true);
+
+        Post existingPost = createMockPost(mockUser);
+        Post updatedPost = createMockPost(mockUser);
+        updatedPost.setId(existingPost.getId());
+        updatedPost.setTitle("Updated post title");
+        updatedPost.setContent("Updated post content");
+
+        Assertions.assertThrows(
+                BlockedUserException.class,
+                () -> postService.update(updatedPost, mockUser)
+        );
+
+        Mockito.verify(mockPostRepository, Mockito.never())
+                .update(Mockito.any(Post.class));
+    }
+
+    @Test
     public void delete_Should_CallRepository_When_UserIsOwner() {
         User owner = createMockUser();
         owner.setId(5);
@@ -231,6 +252,21 @@ public class PostServiceImplTests {
         Assertions.assertThrows(
                 UnauthorizedAccessException.class,
                 () -> postService.delete(1, otherUser)
+        );
+
+        Mockito.verify(mockPostRepository, Mockito.never())
+                .delete(Mockito.anyInt());
+    }
+
+    @Test
+    public void delete_Should_ThrowException_When_UserIsBlocked() {
+        User mockUser = createMockUser();
+        mockUser.setId(5);
+        mockUser.setBlocked(true);
+
+        Assertions.assertThrows(
+                BlockedUserException.class,
+                () -> postService.delete(1, mockUser)
         );
 
         Mockito.verify(mockPostRepository, Mockito.never())
