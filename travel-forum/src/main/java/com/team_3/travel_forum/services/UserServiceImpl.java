@@ -72,11 +72,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void delete(int id) {
-        userRepository.delete(id);
-    }
-
-    @Override
     public void block(int id) {
         User user = userRepository.get(id);
 

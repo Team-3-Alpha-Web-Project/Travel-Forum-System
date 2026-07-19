@@ -146,23 +146,6 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public void delete(int id) {
-        try (Session session = sessionFactory.openSession()) {
-
-            session.beginTransaction();
-
-            User user = session.find(User.class, id);
-            if (user == null) {
-                throw new EntityNotFoundException("User");
-            }
-
-            session.remove(user);
-
-            session.getTransaction().commit();
-        }
-    }
-
-    @Override
     public long countAllUsers() {
         try (Session session = sessionFactory.openSession()) {
 

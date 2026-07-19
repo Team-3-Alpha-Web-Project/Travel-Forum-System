@@ -21,8 +21,6 @@ public interface UserService {
 
     void update(int id, User user);
 
-    void delete(int id);
-
     void block(int id);
 
     void unblock(int id);
