@@ -34,6 +34,9 @@ public class PostServiceImplTests {
                 .thenReturn(mockPosts);
 
         Assertions.assertEquals(mockPosts, postService.get());
+
+        Mockito.verify(mockPostRepository, Mockito.times(1)).get();
+
     }
 
     @Test
@@ -44,6 +47,8 @@ public class PostServiceImplTests {
 
         Assertions.assertEquals(mockPost, postService.get(1));
 
+        Mockito.verify(mockPostRepository, Mockito.times(1)).get(Mockito.anyInt());
+
     }
 
     @Test
@@ -52,6 +57,8 @@ public class PostServiceImplTests {
                 .thenThrow(new EntityNotFoundException("Post"));
 
         Assertions.assertThrows(EntityNotFoundException.class, () -> postService.get(1));
+
+        Mockito.verify(mockPostRepository, Mockito.times(1)).get(Mockito.anyInt());
 
     }
 
@@ -64,6 +71,8 @@ public class PostServiceImplTests {
                 .thenReturn(mockPosts);
 
         Assertions.assertEquals(mockPosts, postService.getByUser(mockUser.getId()));
+
+        Mockito.verify(mockPostRepository, Mockito.times(1)).getByUser(mockUser.getId());
 
     }
 
@@ -243,5 +252,7 @@ public class PostServiceImplTests {
                 .thenReturn((long) mockPosts.size());
 
         Assertions.assertEquals(mockPosts.size(), postService.countAllPosts());
+
+        Mockito.verify(mockPostRepository, Mockito.times(1)).countAllPosts();
     }
 }
