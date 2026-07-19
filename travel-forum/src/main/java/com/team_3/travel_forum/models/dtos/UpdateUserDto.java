@@ -21,6 +21,8 @@ public class UpdateUserDto {
     @Size(max = 2048)
     private String profilePhotoUrl;
 
+    private String username;
+
     public UpdateUserDto() {
     }
 
@@ -54,5 +56,13 @@ public class UpdateUserDto {
 
     public void setProfilePhotoUrl(String profilePhotoUrl) {
         this.profilePhotoUrl = profilePhotoUrl;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 }

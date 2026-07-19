@@ -57,6 +57,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void update(int id, User user) {
+        if (user.getUsername() != null) {
+            throw new IllegalArgumentException("Username cannot be changed.");
+        }
+
         User userToUpdate = userRepository.get(id);
 
         if (!userToUpdate.getEmail().equalsIgnoreCase(user.getEmail()) && userRepository.existsByEmail(user.getEmail())) {
